@@ -157,23 +157,42 @@
   ::highlight(search-hit) { background-color: #d6e8ff; color: inherit; }
   ::highlight(search-now) { background-color: #ffb020; color: inherit; }
 
-  #tocjump {
+  #tocdock {
     position: fixed;
     right: 18px;
     bottom: 18px;
     z-index: 40;
-    max-width: min(380px, calc(100vw - 36px));
+    width: min(380px, calc(100vw - 36px));
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  #tocjump {
+    display: flex;
+    align-items: stretch;
+    border-radius: 12px;
+    background: #16325c;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(22, 50, 92, .28);
+    overflow: hidden;
+  }
+  #tocopen {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 1px;
-    padding: 8px 14px 7px;
-    border-radius: 12px;
-    background: #16325c;
-    color: #fff;
-    text-decoration: none;
-    box-shadow: 0 6px 18px rgba(22, 50, 92, .28);
-    font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    margin: 0;
+    padding: 8px 12px 7px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
   }
   #tocjump #where {
     font-size: 13px;
@@ -184,7 +203,87 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  #tocjump .go { font-size: 11px; font-weight: 450; color: #c5d4ea; }
+  #pagepos, #tocjump > a, #syncstate {
+    font-size: 11px;
+    font-weight: 450;
+    color: #c5d4ea;
+  }
+  #tocjump > a {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    border-left: 1px solid rgba(255,255,255,.22);
+    white-space: nowrap;
+  }
+  #tocpanel {
+    max-height: min(52vh, 440px);
+    overflow: auto;
+    background: #fff;
+    color: #16325c;
+    border: 1px solid #d5deea;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(22, 50, 92, .16);
+    padding: 8px;
+  }
+  #tocpanel[hidden] { display: none !important; }
+  #tocpanel .toc-all {
+    display: block;
+    padding: 6px 8px;
+    color: #16325c;
+    font-weight: 650;
+    text-decoration: none;
+    border-radius: 8px;
+  }
+  #tocpanel .toc-all:hover, #seclist button:hover { background: #f4f7fb; }
+  #seclist { list-style: none; margin: 4px 0 8px; padding: 0; }
+  #seclist button {
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    color: #16325c;
+    font: inherit;
+    font-size: 12.5px;
+    line-height: 1.4;
+    padding: 5px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #seclist button[aria-current="true"] { background: #ffe39a; }
+  #syncform {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    padding: 8px 8px 4px;
+    border-top: 1px solid #e6edf5;
+  }
+  #syncform label { width: 100%; font-size: 11px; color: #5c6b7a; }
+  #synccode {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 13px;
+    padding: 6px 8px;
+    border: 1px solid #c5d0de;
+    border-radius: 6px;
+    color: #16325c;
+    background: #fff;
+  }
+  #syncform button {
+    font: inherit;
+    font-size: 12px;
+    padding: 6px 8px;
+    border: 1px solid #c5d0de;
+    border-radius: 6px;
+    background: #f4f7fb;
+    color: #16325c;
+    cursor: pointer;
+  }
+  #syncstate { width: 100%; margin: 0; color: #5c6b7a; }
 
   @media print {
     body { padding: 0; max-width: none; }
@@ -206,10 +305,26 @@
   <button type="button" id="pen" aria-pressed="false" title="누른 뒤 글자를 드래그하면 표시되고 이 브라우저에 저장됩니다">형광펜</button>
   <button type="button" id="eraser" aria-pressed="false" title="지울 글자를 드래그하거나 표시를 클릭합니다">지우개</button>
   <span id="markcount" class="count" aria-live="polite"></span>
-  <a id="tocjump" href="#toc">
-    <span id="where">목차</span>
-    <span class="go">목차로</span>
-  </a>
+  <div id="tocdock">
+    <div id="tocpanel" hidden>
+      <a class="toc-all" href="#toc">전체 목차</a>
+      <ol id="seclist"></ol>
+      <form id="syncform">
+        <label for="synccode">다른 컴퓨터와 맞출 코드</label>
+        <input id="synccode" type="text" autocomplete="off" spellcheck="false" maxlength="40" placeholder="4자 이상">
+        <button type="button" id="syncnew">새 코드</button>
+        <button type="submit">연결</button>
+        <p id="syncstate"></p>
+      </form>
+    </div>
+    <div id="tocjump">
+      <button type="button" id="tocopen" aria-expanded="false" aria-controls="tocpanel">
+        <span id="where">목차</span>
+        <span id="pagepos"></span>
+      </button>
+      <a href="#toc">목차</a>
+    </div>
+  </div>
 </div>
 
 <nav class="toc" id="toc">
@@ -23727,8 +23842,18 @@
   }
 
   function store() {
-    try { localStorage.setItem(KEY, JSON.stringify({ v: 1, marks: saved })); } catch (e) {}
+    var at = Date.now();
+    try { localStorage.setItem(KEY, JSON.stringify({ v: 1, marks: saved, at: at })); } catch (e) {}
+    if (!store.quiet && window.__adrPushMarks) window.__adrPushMarks(saved, at);
   }
+  window.__adrReplaceMarks = function (marks, at) {
+    saved = Array.isArray(marks) ? marks : [];
+    store.quiet = true;
+    try { localStorage.setItem(KEY, JSON.stringify({ v: 1, marks: saved, at: at || Date.now() })); } catch (e) {}
+    store.quiet = false;
+    paintMarks();
+    if (hits.length) paintSearch();
+  };
 
   function load() {
     try {
@@ -23959,15 +24084,67 @@
 })();
 
 (function () {
-  var jump = document.getElementById("tocjump");
+  var dock = document.getElementById("tocdock");
+  var openBtn = document.getElementById("tocopen");
+  var panel = document.getElementById("tocpanel");
   var where = document.getElementById("where");
+  var pagepos = document.getElementById("pagepos");
+  var list = document.getElementById("seclist");
   var toc = document.getElementById("toc");
-  if (!jump || !where || !toc) return;
+  var form = document.getElementById("syncform");
+  var codeInput = document.getElementById("synccode");
+  var state = document.getElementById("syncstate");
+  if (!dock || !openBtn || !panel || !where || !toc) return;
+
   var articles = Array.prototype.slice.call(document.querySelectorAll("article[id^='lec']"));
   var pending = false;
+  var currentArticle = null;
+  var currentIndex = -1;
+  var CODE_KEY = "adr-study-sync-code";
+  var MARK_KEY = "adr-study-marks-v1";
+  var URL = "https://beuqflqbpxzibueuvsom.supabase.co";
+  var ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldXFmbHFicHh6aWJ1ZXV2c29tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ3MTc0MTYsImV4cCI6MjExMDI5MzQxNn0.GyPaANiyRhStUlmCLEhc804b4h_Z4g2BGtR3YyClO7U";
+  var client = null;
+  var channel = null;
+  var hash = "";
+  var pollTimer = 0;
+
+  function headsOf(article) {
+    var nodes = article.querySelectorAll(".slide h3");
+    if (!nodes.length) nodes = article.querySelectorAll("h3");
+    return Array.prototype.slice.call(nodes);
+  }
+
+  function titleOf(article) {
+    var h = article.querySelector("h2");
+    return h ? h.textContent.replace(/\s+/g, " ").trim() : article.id;
+  }
+
+  function renderList(article) {
+    if (!list) return;
+    list.innerHTML = "";
+    if (!article) return;
+    headsOf(article).forEach(function (node, i) {
+      var li = document.createElement("li");
+      var button = document.createElement("button");
+      button.type = "button";
+      var text = (node.textContent || "").replace(/\s+/g, " ").trim() || ("쪽 " + (i + 1));
+      button.textContent = (i + 1) + ". " + text;
+      if (i === currentIndex) button.setAttribute("aria-current", "true");
+      button.addEventListener("click", function () {
+        var top = node.getBoundingClientRect().top + window.scrollY - 84;
+        window.scrollTo({ top: Math.max(0, top) });
+        panel.hidden = true;
+        openBtn.setAttribute("aria-expanded", "false");
+      });
+      li.appendChild(button);
+      list.appendChild(li);
+    });
+  }
+
   function place() {
     pending = false;
-    var line = 120;
+    var line = 130;
     var found = null;
     for (var i = 0; i < articles.length; i++) {
       if (articles[i].getBoundingClientRect().top <= line) found = articles[i];
@@ -23976,24 +24153,200 @@
     var onToc = box.bottom > 80 && box.top < window.innerHeight * 0.55;
     if (!found || onToc) {
       where.textContent = "목차";
-      jump.title = "목차";
+      if (pagepos) pagepos.textContent = "";
+      openBtn.title = "목차";
+      currentArticle = null;
+      currentIndex = -1;
+      if (!panel.hidden) renderList(null);
       return;
     }
-    var h = found.querySelector("h2");
-    var name = h ? h.textContent.replace(/\s+/g, " ").trim() : found.id;
+    var heads = headsOf(found);
+    var idx = 0;
+    for (var j = 0; j < heads.length; j++) {
+      if (heads[j].getBoundingClientRect().top <= line) idx = j;
+    }
+    currentArticle = found;
+    currentIndex = heads.length ? idx : -1;
+    var name = titleOf(found);
     where.textContent = name;
-    jump.title = name + " · 목차로 이동";
+    var pos = heads.length ? ((idx + 1) + "/" + heads.length + "쪽") : "";
+    if (pagepos) pagepos.textContent = pos;
+    openBtn.title = pos ? (name + " " + pos) : name;
+    if (!panel.hidden) renderList(found);
   }
+
   function schedule() {
     if (pending) return;
     pending = true;
     requestAnimationFrame(place);
   }
+
+  function setOpen(next) {
+    panel.hidden = !next;
+    openBtn.setAttribute("aria-expanded", next ? "true" : "false");
+    if (next) renderList(currentArticle);
+  }
+
+  openBtn.addEventListener("click", function () { setOpen(panel.hidden); });
+  document.addEventListener("click", function (e) {
+    if (panel.hidden) return;
+    if (e.target.closest && e.target.closest("#tocdock")) return;
+    setOpen(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") setOpen(false);
+  });
+  var all = panel.querySelector(".toc-all");
+  if (all) all.addEventListener("click", function () { setOpen(false); });
   document.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", schedule);
   window.addEventListener("hashchange", schedule);
   place();
+
+  function setState(text) { if (state) state.textContent = text; }
+  function localMarks() {
+    try { return JSON.parse(localStorage.getItem(MARK_KEY) || "{}"); }
+    catch (e) { return {}; }
+  }
+  function markKey(mark) {
+    return [mark.pre || "", mark.text || "", mark.post || "", mark.n || 1].join("\n");
+  }
+  function union(a, b) {
+    var map = new Map();
+    a.concat(b).forEach(function (mark) {
+      if (mark && mark.text) map.set(markKey(mark), mark);
+    });
+    return Array.from(map.values());
+  }
+  function digest(text) {
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode("adr-study:" + text)).then(function (buf) {
+      return Array.from(new Uint8Array(buf)).map(function (b) {
+        return b.toString(16).padStart(2, "0");
+      }).join("");
+    });
+  }
+  function loadLib() {
+    return new Promise(function (resolve) {
+      if (window.supabase && window.supabase.createClient) return resolve(window.supabase);
+      var script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js";
+      script.onload = function () { resolve(window.supabase || null); };
+      script.onerror = function () { resolve(null); };
+      document.head.appendChild(script);
+    });
+  }
+  function pull() {
+    if (!client || !hash) return;
+    client.rpc("adr_get_marks", { code_hash: hash }).then(function (res) {
+      if (!res || res.error || !res.data) return;
+      var local = localMarks();
+      var localAt = local.at || 0;
+      if ((res.data.at || 0) > localAt && window.__adrReplaceMarks) {
+        window.__adrReplaceMarks(res.data.marks || [], res.data.at);
+        setState("다른 컴퓨터의 표시를 가져왔습니다");
+      }
+    });
+  }
+  function reconcile(remote) {
+    var local = localMarks();
+    var localAt = local.at || 0;
+    var localList = Array.isArray(local.marks) ? local.marks : [];
+    var remoteList = Array.isArray(remote.marks) ? remote.marks : [];
+    var remoteAt = remote.at || 0;
+    if (!localList.length && remoteAt) {
+      if (window.__adrReplaceMarks) window.__adrReplaceMarks(remoteList, remoteAt);
+      setState("저장된 표시를 가져왔습니다");
+      return;
+    }
+    if (localList.length && !remoteAt) {
+      var at = localAt || Date.now();
+      if (window.__adrPushMarks) window.__adrPushMarks(localList, at);
+      return;
+    }
+    if (remoteAt > localAt && localAt > 0) {
+      if (window.__adrReplaceMarks) window.__adrReplaceMarks(remoteList, remoteAt);
+      setState("다른 컴퓨터의 표시를 가져왔습니다");
+      return;
+    }
+    if (localAt > remoteAt && localList.length) {
+      if (window.__adrPushMarks) window.__adrPushMarks(localList, localAt);
+      return;
+    }
+    if (!localAt && localList.length && remoteList.length) {
+      var merged = union(localList, remoteList);
+      var now = Date.now();
+      if (window.__adrReplaceMarks) window.__adrReplaceMarks(merged, now);
+      if (window.__adrPushMarks) window.__adrPushMarks(merged, now);
+    }
+  }
+  function connect(code) {
+    code = (code || "").trim();
+    if (code.length < 4) {
+      setState("코드는 4자 이상으로 넣어 주세요");
+      return;
+    }
+    try { localStorage.setItem(CODE_KEY, code); } catch (e) {}
+    if (codeInput) codeInput.value = code;
+    setState("연결하는 중");
+    loadLib().then(function (lib) {
+      if (!lib) { setState("연결 파일을 열지 못했습니다. 이 브라우저에는 남습니다"); return; }
+      return digest(code).then(function (nextHash) {
+        hash = nextHash;
+        if (!client) client = lib.createClient(URL, ANON);
+        if (channel) { client.removeChannel(channel); channel = null; }
+        clearInterval(pollTimer);
+        return client.rpc("adr_get_marks", { code_hash: hash }).then(function (res) {
+          if (res.error) { setState("연결하지 못했습니다"); return; }
+          reconcile(res.data || { marks: [], at: 0 });
+          channel = client.channel("adr-marks:" + hash, { config: { broadcast: { self: false } } });
+          channel.on("broadcast", { event: "marks" }, function () { pull(); });
+          channel.subscribe(function (status) {
+            if (status === "SUBSCRIBED") setState("연결됨. 다른 컴퓨터에도 이 코드를 넣으세요");
+            if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") setState("실시간 연결이 늦습니다. 잠시 뒤 다시 맞춥니다");
+          });
+          pollTimer = setInterval(function () {
+            if (!document.hidden) pull();
+          }, 1500);
+        });
+      });
+    }).catch(function () { setState("연결하지 못했습니다"); });
+  }
+
+  window.__adrPushMarks = function (marks, at) {
+    if (!client || !hash) return;
+    client.rpc("adr_put_marks", { p_hash: hash, p_marks: marks, p_at: at }).then(function (res) {
+      if (!res || res.error) { setState("저장하지 못했습니다"); return; }
+      var row = res.data || {};
+      if (row.at && row.at > at && window.__adrReplaceMarks) window.__adrReplaceMarks(row.marks || [], row.at);
+      if (channel) channel.send({ type: "broadcast", event: "marks", payload: { at: row.at || at } });
+      setState("맞춰 두었습니다");
+    });
+  };
+
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      connect(codeInput ? codeInput.value : "");
+    });
+  }
+  var newer = document.getElementById("syncnew");
+  if (newer) {
+    newer.addEventListener("click", function () {
+      var alphabet = "abcdefghjkmnpqrstuvwxyz23456789";
+      var bytes = new Uint8Array(8);
+      crypto.getRandomValues(bytes);
+      var out = "";
+      for (var i = 0; i < bytes.length; i++) out += alphabet[bytes[i] % alphabet.length];
+      if (codeInput) codeInput.value = out;
+      connect(out);
+    });
+  }
+  var savedCode = "";
+  try { savedCode = localStorage.getItem(CODE_KEY) || ""; } catch (e) {}
+  if (savedCode) connect(savedCode);
+  else setState("코드를 넣으면 다른 컴퓨터의 형광과 맞춰집니다");
 })();
+
 </script>
 
 </body>
