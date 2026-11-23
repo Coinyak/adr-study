@@ -112,19 +112,76 @@
     box-shadow: inset 0 -0.35mm 0 #e0b03a;
   }
 
+
+  .tools {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: center;
+    margin: 0 0 8mm;
+    padding: 8px 0 10px;
+    background: rgba(255,255,255,.96);
+    border-bottom: 1px solid #d5deea;
+    font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  .tools form { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0; }
+  .tools input[type="search"] {
+    font: inherit;
+    font-size: 14px;
+    width: min(420px, 72vw);
+    padding: 6px 10px;
+    border: 1px solid #c5d0de;
+    border-radius: 6px;
+    color: #16325c;
+    background: #fff;
+  }
+  .tools button {
+    font: inherit;
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 1px solid #c5d0de;
+    border-radius: 6px;
+    background: #f4f7fb;
+    color: #16325c;
+    cursor: pointer;
+  }
+  .tools button[aria-pressed="true"] { background: #ffe39a; border-color: #e0b03a; }
+  #eraser[aria-pressed="true"] { background: #f6d6d6; border-color: #c98b8b; }
+  .tools .count { color: #5c6b7a; font-size: 12px; min-width: 3.2em; }
+  body.pen, body.eraser { cursor: text; }
+  ::highlight(user-mark) { background-color: #ffe39a; color: inherit; }
+  ::highlight(search-hit) { background-color: #d6e8ff; color: inherit; }
+  ::highlight(search-now) { background-color: #ffb020; color: inherit; }
+
   @media print {
     body { padding: 0; max-width: none; }
     nav a { color: inherit; }
+    .tools { display: none; }
+    ::highlight(search-hit), ::highlight(search-now) { background-color: transparent; }
     .slide [data-hl].hot, .talk [data-hl].hot { background: transparent; box-shadow: none; }
   }
 </style>
 </head>
 <body>
+<div class="tools" id="tools">
+  <form id="searchform" role="search">
+    <input id="q" type="search" placeholder="검색" aria-label="검색" autocomplete="off" spellcheck="false">
+    <button type="button" id="qprev" aria-label="이전 결과">이전</button>
+    <button type="button" id="qnext" aria-label="다음 결과">다음</button>
+    <span id="qcount" class="count" aria-live="polite"></span>
+  </form>
+  <button type="button" id="pen" aria-pressed="false" title="누른 뒤 글자를 드래그하면 표시되고 이 브라우저에 저장됩니다">형광펜</button>
+  <button type="button" id="eraser" aria-pressed="false" title="지울 글자를 드래그하거나 표시를 클릭합니다">지우개</button>
+  <span id="markcount" class="count" aria-live="polite"></span>
+</div>
 
 <nav class="toc">
   <p class="kicker">제4차 약물부작용 심화교육</p>
   <h1>강의 정리</h1>
-  <p class="lead">왼쪽은 슬라이드에 적힌 문장이고, 오른쪽은 강의에서 말한 설명입니다. 설명 문장에 마우스를 올리면 슬라이드의 그 항목이 표시됩니다. 1강부터 이 형식으로 다시 쓰고 있습니다.</p>
+  <p class="lead">왼쪽은 슬라이드에 적힌 문장이고, 오른쪽은 강의에서 말한 설명입니다. 설명 문장에 마우스를 올리면 슬라이드의 그 항목이 표시됩니다. 검색으로 찾고, 형광펜을 누른 뒤 글자를 드래그하면 그 표시가 이 브라우저에 남습니다.</p>
   <ol>
     <li><a href="#lec1">한국의약품안전관리원과 약물이상반응</a></li>
     <li><a href="#lec2">약물이상반응 모니터링 및 사례 소개</a></li>
@@ -23431,6 +23488,439 @@
     var id = el.getAttribute("data-hl");
     if (rel && rel.closest && rel.closest("[data-hl]") && rel.closest("[data-hl]").getAttribute("data-hl") === id) return;
     clearHot();
+  });
+})();
+(function () {
+  var KEY = "adr-study-marks-v1";
+  var CAP = 400;
+  var index = null;
+  var hits = [];
+  var hitAt = -1;
+  var saved = [];
+  var mode = "";
+  var skipClick = false;
+
+  function lowerAscii(s) {
+    return s.replace(/[A-Z]/g, function (ch) {
+      return String.fromCharCode(ch.charCodeAt(0) + 32);
+    });
+  }
+
+  function build() {
+    var nodes = [];
+    var starts = [];
+    var map = new Map();
+    var full = "";
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        if (!node.nodeValue) return NodeFilter.FILTER_REJECT;
+        var el = node.parentElement;
+        if (!el || el.closest("script, style, .tools")) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) {
+      var node = walker.currentNode;
+      map.set(node, full.length);
+      nodes.push(node);
+      starts.push(full.length);
+      full += node.nodeValue;
+    }
+    index = { nodes: nodes, starts: starts, map: map, full: full, lower: lowerAscii(full) };
+  }
+
+  function pos(off) {
+    var starts = index.starts;
+    var n = starts.length;
+    if (!n) return null;
+    if (off >= index.full.length) {
+      var last = index.nodes[n - 1];
+      return { node: last, offset: last.nodeValue.length };
+    }
+    var lo = 0;
+    var hi = n - 1;
+    while (lo < hi) {
+      var mid = (lo + hi + 1) >> 1;
+      if (starts[mid] <= off) lo = mid;
+      else hi = mid - 1;
+    }
+    return { node: index.nodes[lo], offset: off - starts[lo] };
+  }
+
+  function rangeFrom(start, end) {
+    if (end <= start) return null;
+    var a = pos(start);
+    var b = pos(end);
+    if (!a || !b) return null;
+    try {
+      var r = document.createRange();
+      r.setStart(a.node, a.offset);
+      r.setEnd(b.node, b.offset);
+      return r;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function firstOffset(node) {
+    if (!node) return null;
+    if (node.nodeType === 3) {
+      var base = index.map.get(node);
+      return base == null ? null : base;
+    }
+    if (node.nodeType !== 1) return null;
+    var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    var t = walker.nextNode();
+    while (t && !index.map.has(t)) t = walker.nextNode();
+    if (!t) return null;
+    return index.map.get(t);
+  }
+
+  function endOffset(node) {
+    if (!node) return null;
+    if (node.nodeType === 3) {
+      var base = index.map.get(node);
+      return base == null ? null : base + node.nodeValue.length;
+    }
+    if (node.nodeType !== 1) return null;
+    var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    var t = walker.nextNode();
+    var last = null;
+    while (t) {
+      if (index.map.has(t)) last = t;
+      t = walker.nextNode();
+    }
+    if (!last) return null;
+    return index.map.get(last) + last.nodeValue.length;
+  }
+
+  function pointOffset(container, offset) {
+    if (!container) return null;
+    if (container.nodeType === 3) {
+      var base = index.map.get(container);
+      if (base == null) return null;
+      return base + Math.max(0, Math.min(offset, container.nodeValue.length));
+    }
+    if (container.nodeType !== 1) return null;
+    var kids = container.childNodes;
+    if (!kids.length) return null;
+    if (offset <= 0) return firstOffset(kids[0]);
+    if (offset >= kids.length) return endOffset(kids[kids.length - 1]);
+    return firstOffset(kids[offset]);
+  }
+
+  function trimSpan(start, end) {
+    var s = start;
+    var e = end;
+    var full = index.full;
+    while (s < e && /\s/.test(full.charAt(s))) s++;
+    while (e > s && /\s/.test(full.charAt(e - 1))) e--;
+    if (s >= e) return null;
+    return [s, e];
+  }
+
+  function selectionSpan() {
+    var sel = window.getSelection();
+    if (!sel || !sel.rangeCount || sel.isCollapsed) return null;
+    var range = sel.getRangeAt(0);
+    var box = document.getElementById("tools");
+    if (box && (box.contains(range.startContainer) || box.contains(range.endContainer))) return null;
+    var a = pointOffset(range.startContainer, range.startOffset);
+    var b = pointOffset(range.endContainer, range.endOffset);
+    if (a == null || b == null || a === b) return null;
+    return trimSpan(Math.min(a, b), Math.max(a, b));
+  }
+
+  function makeAnchor(start, end) {
+    var text = index.full.slice(start, end);
+    var pre = index.full.slice(Math.max(0, start - 32), start);
+    var post = index.full.slice(end, Math.min(index.full.length, end + 32));
+    var needle = pre + text + post;
+    var at = start - pre.length;
+    var n = 0;
+    var from = 0;
+    while (from <= at) {
+      var i = index.full.indexOf(needle, from);
+      if (i < 0 || i > at) break;
+      n++;
+      if (i === at) break;
+      from = i + 1;
+    }
+    return { text: text, pre: pre, post: post, n: n || 1 };
+  }
+
+  function resolve(a) {
+    if (!a || !a.text) return null;
+    var needle = (a.pre || "") + a.text + (a.post || "");
+    var want = a.n || 1;
+    var from = 0;
+    var seen = 0;
+    while (from < index.full.length) {
+      var i = index.full.indexOf(needle, from);
+      if (i < 0) return null;
+      seen++;
+      if (seen === want) {
+        var s = i + (a.pre || "").length;
+        if (index.full.slice(s, s + a.text.length) !== a.text) return null;
+        return [s, s + a.text.length];
+      }
+      var next = i + 1;
+      if (next <= from) return null;
+      from = next;
+    }
+    return null;
+  }
+
+  function pairs() {
+    var out = [];
+    for (var i = 0; i < saved.length; i++) {
+      var r = resolve(saved[i]);
+      if (r) out.push(r);
+    }
+    return out;
+  }
+
+  function merge(list) {
+    if (!list.length) return [];
+    var arr = list.slice().sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+    var out = [arr[0].slice()];
+    for (var i = 1; i < arr.length; i++) {
+      var cur = out[out.length - 1];
+      if (arr[i][0] <= cur[1]) cur[1] = Math.max(cur[1], arr[i][1]);
+      else out.push(arr[i].slice());
+    }
+    return out;
+  }
+
+  function store() {
+    try { localStorage.setItem(KEY, JSON.stringify({ v: 1, marks: saved })); } catch (e) {}
+  }
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      if (data && Array.isArray(data.marks)) saved = data.marks;
+    } catch (e) {}
+  }
+
+  function setHighlight(name, ranges) {
+    if (!window.CSS || !CSS.highlights || typeof Highlight !== "function") return false;
+    var hl = new Highlight();
+    for (var i = 0; i < ranges.length; i++) hl.add(ranges[i]);
+    CSS.highlights.set(name, hl);
+    return true;
+  }
+
+  function paintMarks() {
+    var ranges = [];
+    var list = pairs();
+    for (var i = 0; i < list.length; i++) {
+      var r = rangeFrom(list[i][0], list[i][1]);
+      if (r) ranges.push(r);
+    }
+    var ok = setHighlight("user-mark", ranges);
+    var note = document.getElementById("markcount");
+    if (note) note.textContent = saved.length ? (saved.length + "곳 저장") : "";
+    var pen = document.getElementById("pen");
+    if (pen && !ok) pen.disabled = true;
+    return ok;
+  }
+
+  function paintSearch() {
+    var ranges = [];
+    var current = [];
+    var from = 0;
+    var to = hits.length;
+    if (hits.length > 80 && hitAt >= 0) {
+      from = Math.max(0, hitAt - 40);
+      to = Math.min(hits.length, hitAt + 41);
+    }
+    for (var i = from; i < to; i++) {
+      if (i === hitAt) continue;
+      var r = rangeFrom(hits[i][0], hits[i][1]);
+      if (r) ranges.push(r);
+    }
+    if (hitAt >= 0 && hits[hitAt]) {
+      var cur = rangeFrom(hits[hitAt][0], hits[hitAt][1]);
+      if (cur) current.push(cur);
+    }
+    setHighlight("search-hit", ranges);
+    setHighlight("search-now", current);
+    return current[0] || null;
+  }
+
+  function showCount() {
+    var el = document.getElementById("qcount");
+    if (!el) return;
+    if (!hits.length) {
+      el.textContent = document.getElementById("q").value.trim() ? "없음" : "";
+      return;
+    }
+    var extra = hits.capped ? "+" : "";
+    el.textContent = (hitAt + 1) + "/" + hits.length + extra;
+  }
+
+  function go(delta) {
+    if (!hits.length) return;
+    if (hitAt < 0) hitAt = 0;
+    else hitAt = (hitAt + delta + hits.length) % hits.length;
+    var cur = paintSearch();
+    showCount();
+    if (!cur) return;
+    var rect = cur.getBoundingClientRect();
+    var top = window.scrollY + rect.top - 78;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }
+
+  function search(q) {
+    hits = [];
+    hitAt = -1;
+    var needle = lowerAscii(q.trim());
+    if (needle) {
+      var hay = index.lower;
+      var from = 0;
+      while (hits.length < CAP) {
+        var i = hay.indexOf(needle, from);
+        if (i < 0) break;
+        hits.push([i, i + needle.length]);
+        var next = i + needle.length;
+        from = next > i ? next : i + 1;
+      }
+      if (hits.length === CAP && hay.indexOf(needle, from) >= 0) hits.capped = true;
+      hitAt = hits.length ? 0 : -1;
+    }
+    var cur = paintSearch();
+    showCount();
+    if (cur) {
+      var rect = cur.getBoundingClientRect();
+      window.scrollTo({ top: Math.max(0, window.scrollY + rect.top - 78), behavior: "smooth" });
+    }
+  }
+
+  function replaceSaved(list) {
+    var dropped = [];
+    for (var j = 0; j < saved.length; j++) if (!resolve(saved[j])) dropped.push(saved[j]);
+    var merged = merge(list);
+    saved = dropped;
+    for (var i = 0; i < merged.length; i++) saved.push(makeAnchor(merged[i][0], merged[i][1]));
+    store();
+    paintMarks();
+    if (hits.length) paintSearch();
+  }
+
+  function addSpan(span) {
+    var list = pairs();
+    list.push(span);
+    replaceSaved(list);
+  }
+
+  function eraseSpan(span) {
+    var list = [];
+    var cur = pairs();
+    for (var i = 0; i < cur.length; i++) {
+      var s = cur[i][0];
+      var e = cur[i][1];
+      if (e <= span[0] || s >= span[1]) list.push(cur[i]);
+      else {
+        if (s < span[0]) list.push([s, span[0]]);
+        if (e > span[1]) list.push([span[1], e]);
+      }
+    }
+    replaceSaved(list);
+  }
+
+  function eraseAt(off) {
+    var cur = pairs();
+    var list = [];
+    var removed = false;
+    for (var i = 0; i < cur.length; i++) {
+      if (!removed && off >= cur[i][0] && off < cur[i][1]) removed = true;
+      else list.push(cur[i]);
+    }
+    if (removed) replaceSaved(list);
+  }
+
+  function pointFromEvent(e) {
+    var range = null;
+    if (document.caretRangeFromPoint) range = document.caretRangeFromPoint(e.clientX, e.clientY);
+    else if (document.caretPositionFromPoint) {
+      var p = document.caretPositionFromPoint(e.clientX, e.clientY);
+      if (!p) return null;
+      return pointOffset(p.offsetNode, p.offset);
+    }
+    if (!range) return null;
+    return pointOffset(range.startContainer, range.startOffset);
+  }
+
+  function setMode(next) {
+    mode = mode === next ? "" : next;
+    document.body.classList.toggle("pen", mode === "pen");
+    document.body.classList.toggle("eraser", mode === "eraser");
+    var pen = document.getElementById("pen");
+    var eraser = document.getElementById("eraser");
+    if (pen) pen.setAttribute("aria-pressed", mode === "pen" ? "true" : "false");
+    if (eraser) eraser.setAttribute("aria-pressed", mode === "eraser" ? "true" : "false");
+  }
+
+  function onSelect() {
+    if (!mode) return;
+    var span = selectionSpan();
+    if (!span) return;
+    if (mode === "pen") addSpan(span);
+    else eraseSpan(span);
+    skipClick = true;
+    var sel = window.getSelection();
+    if (sel) sel.removeAllRanges();
+  }
+
+  var form = document.getElementById("searchform");
+  var input = document.getElementById("q");
+  if (!form || !input || !window.CSS || !CSS.highlights || typeof Highlight !== "function") return;
+
+  load();
+  build();
+  paintMarks();
+
+  var searchTimer = 0;
+  input.addEventListener("input", function () {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function () { search(input.value); }, 140);
+  });
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      go(e.shiftKey ? -1 : 1);
+    }
+  });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    go(1);
+  });
+  document.getElementById("qnext").addEventListener("click", function () { go(1); });
+  document.getElementById("qprev").addEventListener("click", function () { go(-1); });
+  document.getElementById("pen").addEventListener("click", function () { setMode("pen"); });
+  document.getElementById("eraser").addEventListener("click", function () { setMode("eraser"); });
+
+  document.addEventListener("mouseup", function (e) {
+    if (e.target && e.target.closest && e.target.closest(".tools")) return;
+    onSelect();
+  });
+  document.addEventListener("touchend", function (e) {
+    if (e.target && e.target.closest && e.target.closest(".tools")) return;
+    onSelect();
+  });
+  document.addEventListener("click", function (e) {
+    if (skipClick) { skipClick = false; return; }
+    if (mode !== "eraser") return;
+    if (e.target && e.target.closest && e.target.closest(".tools")) return;
+    var off = pointFromEvent(e);
+    if (off == null) return;
+    eraseAt(off);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") setMode("");
   });
 })();
 </script>
