@@ -157,6 +157,35 @@
   ::highlight(search-hit) { background-color: #d6e8ff; color: inherit; }
   ::highlight(search-now) { background-color: #ffb020; color: inherit; }
 
+  #tocjump {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 40;
+    max-width: min(380px, calc(100vw - 36px));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    padding: 8px 14px 7px;
+    border-radius: 12px;
+    background: #16325c;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(22, 50, 92, .28);
+    font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  #tocjump #where {
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.35;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #tocjump .go { font-size: 11px; font-weight: 450; color: #c5d4ea; }
+
   @media print {
     body { padding: 0; max-width: none; }
     nav a { color: inherit; }
@@ -177,9 +206,13 @@
   <button type="button" id="pen" aria-pressed="false" title="누른 뒤 글자를 드래그하면 표시되고 이 브라우저에 저장됩니다">형광펜</button>
   <button type="button" id="eraser" aria-pressed="false" title="지울 글자를 드래그하거나 표시를 클릭합니다">지우개</button>
   <span id="markcount" class="count" aria-live="polite"></span>
+  <a id="tocjump" href="#toc">
+    <span id="where">목차</span>
+    <span class="go">목차로</span>
+  </a>
 </div>
 
-<nav class="toc">
+<nav class="toc" id="toc">
   <p class="kicker">제4차 약물부작용 심화교육</p>
   <h1>강의 정리</h1>
   <p class="lead">왼쪽은 슬라이드에 적힌 문장이고, 오른쪽은 강의에서 말한 설명입니다. 설명 문장에 마우스를 올리면 슬라이드의 그 항목이 표시됩니다. 검색으로 찾고, 형광펜을 누른 뒤 글자를 드래그하면 그 표시가 이 브라우저에 남습니다.</p>
@@ -23923,6 +23956,43 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") setMode("");
   });
+})();
+
+(function () {
+  var jump = document.getElementById("tocjump");
+  var where = document.getElementById("where");
+  var toc = document.getElementById("toc");
+  if (!jump || !where || !toc) return;
+  var articles = Array.prototype.slice.call(document.querySelectorAll("article[id^='lec']"));
+  var pending = false;
+  function place() {
+    pending = false;
+    var line = 120;
+    var found = null;
+    for (var i = 0; i < articles.length; i++) {
+      if (articles[i].getBoundingClientRect().top <= line) found = articles[i];
+    }
+    var box = toc.getBoundingClientRect();
+    var onToc = box.bottom > 80 && box.top < window.innerHeight * 0.55;
+    if (!found || onToc) {
+      where.textContent = "목차";
+      jump.title = "목차";
+      return;
+    }
+    var h = found.querySelector("h2");
+    var name = h ? h.textContent.replace(/\s+/g, " ").trim() : found.id;
+    where.textContent = name;
+    jump.title = name + " · 목차로 이동";
+  }
+  function schedule() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(place);
+  }
+  document.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule);
+  window.addEventListener("hashchange", schedule);
+  place();
 })();
 </script>
 
