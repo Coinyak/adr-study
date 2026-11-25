@@ -23945,12 +23945,51 @@
     }
   }
 
+  function normalizeCuts(cuts) {
+    var arr = [];
+    for (var i = 0; i < (cuts || []).length; i++) {
+      var c = cuts[i];
+      if (!c || c.length < 2 || c[1] <= c[0]) continue;
+      arr.push([c[0], c[1]]);
+    }
+    arr.sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+    var out = [];
+    for (var j = 0; j < arr.length; j++) {
+      if (!out.length || arr[j][0] > out[out.length - 1][1]) out.push(arr[j].slice());
+      else out[out.length - 1][1] = Math.max(out[out.length - 1][1], arr[j][1]);
+    }
+    return out;
+  }
+  function visibleOffsets(len, cuts) {
+    var parts = [[0, len]];
+    var norm = normalizeCuts(cuts);
+    for (var i = 0; i < norm.length; i++) {
+      var cs = norm[i][0], ce = norm[i][1];
+      var next = [];
+      for (var p = 0; p < parts.length; p++) {
+        var a = parts[p][0], b = parts[p][1];
+        if (ce <= a || cs >= b) { next.push(parts[p]); continue; }
+        if (a < cs) next.push([a, cs]);
+        if (ce < b) next.push([ce, b]);
+      }
+      parts = next;
+    }
+    return parts.filter(function (part) { return part[1] > part[0]; });
+  }
+  window.__adrNormalizeCuts = normalizeCuts;
+  window.__adrVisibleOffsets = visibleOffsets;
   function paintMarks() {
     var ranges = [];
-    var list = pairs();
-    for (var i = 0; i < list.length; i++) {
-      var r = rangeFrom(list[i][0], list[i][1]);
-      if (r) ranges.push(r);
+    for (var i = 0; i < saved.length; i++) {
+      var mark = saved[i];
+      if (!mark || !mark.text || mark.deleted) continue;
+      var span = resolve(mark);
+      if (!span) continue;
+      var parts = visibleOffsets(mark.text.length, mark.cuts);
+      for (var p = 0; p < parts.length; p++) {
+        var r = rangeFrom(span[0] + parts[p][0], span[0] + parts[p][1]);
+        if (r) ranges.push(r);
+      }
     }
     var ok = setHighlight("user-mark", ranges);
     var note = document.getElementById("markcount");
@@ -24058,14 +24097,26 @@
       if (mark.deleted) { tombstones.push(mark); continue; }
       var at = resolve(mark);
       if (!at) { unresolved.push(mark); continue; }
-      var covered = false;
+      var coverId = "";
       for (var k = 0; k < merged.length; k++) {
-        if (merged[k][0] === at[0] && merged[k][1] === at[1]) { covered = true; break; }
+        if (merged[k][0] === at[0] && merged[k][1] === at[1]) {
+          coverId = markIdentity(makeAnchor(merged[k][0], merged[k][1]));
+          break;
+        }
       }
-      if (!covered) tombstones.push(Object.assign({}, mark, { deleted: true, at: Date.now() }));
+      if (coverId !== id) tombstones.push(Object.assign({}, mark, { deleted: true, at: Date.now() }));
+    }
+    var prevAt = {};
+    for (var q = 0; q < saved.length; q++) {
+      if (saved[q] && saved[q].text && !saved[q].deleted) prevAt[markIdentity(saved[q])] = saved[q].at;
     }
     var fresh = [];
-    for (var i = 0; i < merged.length; i++) fresh.push(makeAnchor(merged[i][0], merged[i][1]));
+    for (var i = 0; i < merged.length; i++) {
+      var anchor = makeAnchor(merged[i][0], merged[i][1]);
+      var prev = prevAt[markIdentity(anchor)];
+      if (prev) anchor.at = prev;
+      fresh.push(anchor);
+    }
     var live = [];
     var seenLive = {};
     var pool = unresolved.concat(fresh);
@@ -24089,36 +24140,63 @@
     if (hits.length) paintSearch();
   }
 
+  function commitMarks() {
+    store();
+    paintMarks();
+    if (hits.length) paintSearch();
+  }
   function addSpan(span) {
-    var list = pairs();
-    list.push(span);
-    replaceSaved(list);
+    var anchor = makeAnchor(span[0], span[1]);
+    var id = markIdentity(anchor);
+    for (var i = 0; i < saved.length; i++) {
+      if (markIdentity(saved[i]) !== id) continue;
+      saved[i] = Object.assign({}, saved[i], { deleted: false, cuts: [], at: Date.now() });
+      commitMarks();
+      return;
+    }
+    saved.push(anchor);
+    commitMarks();
   }
 
   function eraseSpan(span) {
-    var list = [];
-    var cur = pairs();
-    for (var i = 0; i < cur.length; i++) {
-      var s = cur[i][0];
-      var e = cur[i][1];
-      if (e <= span[0] || s >= span[1]) list.push(cur[i]);
-      else {
-        if (s < span[0]) list.push([s, span[0]]);
-        if (e > span[1]) list.push([span[1], e]);
-      }
+    var now = Date.now();
+    var changed = false;
+    var next = [];
+    for (var i = 0; i < saved.length; i++) {
+      var mark = saved[i];
+      if (!mark || !mark.text || mark.deleted) { next.push(mark); continue; }
+      var range = resolve(mark);
+      if (!range || range[1] <= span[0] || range[0] >= span[1]) { next.push(mark); continue; }
+      var rel0 = Math.max(0, span[0] - range[0]);
+      var rel1 = Math.min(mark.text.length, span[1] - range[0]);
+      if (rel1 <= rel0) { next.push(mark); continue; }
+      changed = true;
+      var cuts = normalizeCuts((mark.cuts || []).concat([[rel0, rel1]]));
+      var updated = Object.assign({}, mark, { cuts: cuts, at: now });
+      if (!visibleOffsets(mark.text.length, cuts).length) updated.deleted = true;
+      next.push(updated);
     }
-    replaceSaved(list);
+    if (!changed) return;
+    saved = next;
+    commitMarks();
   }
 
   function eraseAt(off) {
-    var cur = pairs();
-    var list = [];
-    var removed = false;
-    for (var i = 0; i < cur.length; i++) {
-      if (!removed && off >= cur[i][0] && off < cur[i][1]) removed = true;
-      else list.push(cur[i]);
+    var now = Date.now();
+    var changed = false;
+    var next = [];
+    for (var i = 0; i < saved.length; i++) {
+      var mark = saved[i];
+      if (!mark || !mark.text || mark.deleted) { next.push(mark); continue; }
+      var range = resolve(mark);
+      if (range && off >= range[0] && off < range[1]) {
+        changed = true;
+        next.push(Object.assign({}, mark, { deleted: true, at: now }));
+      } else next.push(mark);
     }
-    if (removed) replaceSaved(list);
+    if (!changed) return;
+    saved = next;
+    commitMarks();
   }
 
   function pointFromEvent(e) {
@@ -24331,25 +24409,44 @@
   function markKey(mark) {
     return [mark.text || "", mark.pre || "", mark.post || "", mark.n || 1].join("\n");
   }
+  function normalizeCuts(cuts) { return window.__adrNormalizeCuts(cuts); }
+  function visibleOffsets(len, cuts) { return window.__adrVisibleOffsets(len, cuts); }
   function unionMarks(primary, extra) {
     var map = new Map();
     function put(mark) {
       if (!mark || !mark.text) return;
       var key = markKey(mark);
       var prev = map.get(key);
-      if (!prev || (mark.at || 0) >= (prev.at || 0)) map.set(key, mark);
+      if (!prev) { map.set(key, mark); return; }
+      var at = mark.at || 0;
+      var prevAt = prev.at || 0;
+      var newer = (at > prevAt || (at === prevAt && mark.deleted && !prev.deleted)) ? mark : prev;
+      var older = newer === mark ? prev : mark;
+      if (newer.deleted) { map.set(key, newer); return; }
+      var cuts = normalizeCuts((newer.cuts || []).concat(older.cuts || []));
+      var merged = Object.assign({}, newer, { cuts: cuts, at: Math.max(at, prevAt) });
+      if (!visibleOffsets((merged.text || "").length, cuts).length) merged.deleted = true;
+      map.set(key, merged);
     }
     (extra || []).forEach(put);
     (primary || []).forEach(put);
     return Array.from(map.values());
   }
   function sameMarkList(a, b) {
-    if (!a || !b || a.length !== b.length) return false;
-    var keys = {};
-    for (var i = 0; i < a.length; i++) keys[markKey(a[i]) + (a[i].deleted ? "\tdeleted" : "")] = 1;
-    for (var j = 0; j < b.length; j++) {
-      if (!keys[markKey(b[j]) + (b[j].deleted ? "\tdeleted" : "")]) return false;
+    function pack(list) {
+      var rows = [];
+      for (var i = 0; i < (list || []).length; i++) {
+        var m = list[i];
+        if (!m || !m.text) continue;
+        rows.push(markKey(m) + "\t" + (m.deleted ? "1" : "0") + "\t" + (m.at || 0) + "\t" + JSON.stringify(m.cuts || []));
+      }
+      rows.sort();
+      return rows;
     }
+    var x = pack(a);
+    var y = pack(b);
+    if (x.length !== y.length) return false;
+    for (var n = 0; n < x.length; n++) if (x[n] !== y[n]) return false;
     return true;
   }
   var pushing = false;
@@ -24387,9 +24484,13 @@
     if (!sameMarkList(merged, remoteList) && window.__adrPushMarks) window.__adrPushMarks(merged, now);
     setState(statusLine(merged));
   }
+  var connGen = 0;
   function pull() {
     if (!client || !hash) return;
-    client.rpc("adr_get_marks", { code_hash: hash }).then(function (res) {
+    var asked = hash;
+    var gen = connGen;
+    client.rpc("adr_get_marks", { code_hash: asked }).then(function (res) {
+      if (asked !== hash || gen !== connGen) return;
       if (!res || res.error || !res.data) return;
       reconcile(res.data);
     });
@@ -24402,6 +24503,7 @@
     }
     try { localStorage.setItem(CODE_KEY, code); } catch (e) {}
     if (codeInput) codeInput.value = code;
+    connGen++;
     setState("연결하는 중");
     loadLib().then(function (lib) {
       if (!lib) { setState("연결 파일을 열지 못했습니다. 이 브라우저에는 남습니다"); return; }
