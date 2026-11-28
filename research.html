@@ -1141,8 +1141,8 @@
             </tr>
             <tr>
               <td><strong>AI 번역투 제거</strong></td>
-              <td><strong>humanize-korean</strong> 패턴 규칙 + <strong>병원 보고체 필터</strong></td>
-              <td><em>"~하는 것으로 사료됩니다"</em>, <em>"~에 기인한"</em>, 무생물 주어 등 70~85개 AI 번역투를 탐지해 <strong>숫자·날짜는 100% 보존</strong>하면서 자연스러운 의무기록 음슴체(<code>~발현함</code>, <code>~평가함</code>)로 교정.</td>
+              <td><strong><code>im-not-ai</code></strong> (<a href="https://github.com/epoko77-ai/im-not-ai" target="_blank" rel="noopener">epoko77-ai/im-not-ai</a> · <code>humanize-korean</code>) 방식 + <strong>병원 보고체 필터</strong></td>
+              <td>영어 직역 번역투(<em>"~를 통해"</em>, <em>"~에 있어서"</em>, <em>"~에 의해"</em>), 무생물 주어+타동사 구문, 이중피동(<em>"~되어지다"</em>), 기계적 병렬·상투적 종결구(<em>"~하는 것으로 사료됩니다"</em>)를 체계적 분류(Taxonomy)로 탐지·교정하고, <strong>원문 사실·숫자·날짜 왜곡(Drift) 0% 감사 파이프라인</strong>을 거쳐 자연스러운 한국어 의무기록 문체(<code>~발현함</code>, <code>~평가함</code>)로 정리.</td>
             </tr>
           </tbody>
         </table>
