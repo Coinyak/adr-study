@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>연구용 — ADR 인과성 평가 봇 정책 세팅 설계 노트</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+  :root {
+    --navy: #1d3f73;
+    --navy-dark: #10284d;
+    --navy-mid: #16325c;
+    --slate: #5c6b7a;
+    --border: #d5deea;
+    --border-soft: #e6edf5;
+    --bg-card: #f4f7fb;
+    --bg-head: #eef3f9;
+    --research: #4f46e5;
+    --research-bg: #eef2ff;
+    --research-border: #a5b4fc;
+    --gold-bg: #fff6db;
+    --gold-border: #e5b94c;
+    --red-bg: #fdf2f2;
+    --red-border: #d97777;
+    --red-text: #8c1d1d;
+    --green-bg: #eef8f1;
+    --green-border: #5da675;
+    --green-text: #1b5e34;
+    --text: #1c1c1c;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--text);
+    background: #fff;
+    font-family: "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14.5px;
+    line-height: 1.66;
+  }
+
+  /* Research Disclaimer Strip */
+  .research-strip {
+    background: #1e1b4b;
+    color: #e0e7ff;
+    font-size: 12.2px;
+    padding: 7px 18px;
+    text-align: center;
+    letter-spacing: 0.01em;
+  }
+  .research-strip strong { color: #fde68a; }
+
+  /* Sticky Top Toolbar */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 9px 18px;
+  }
+  .toolbar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .nav-pill, .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font: inherit;
+    font-size: 12.6px;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 7px;
+    border: 1px solid #c5d0de;
+    background: var(--bg-card);
+    color: var(--navy-mid);
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .nav-pill:hover, .btn:hover { background: #e8eff8; }
+  .btn-primary {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--navy-dark); }
+  .research-tag {
+    margin-left: auto;
+    font-size: 11.5px;
+    font-weight: 750;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--research-bg);
+    color: var(--research);
+    border: 1px solid var(--research-border);
+  }
+
+  /* Layout */
+  .shell {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 22px 18px 72px;
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: sticky;
+    top: 66px;
+    max-height: calc(100vh - 84px);
+    overflow-y: auto;
+    font-size: 12.8px;
+  }
+  .sidebar-title {
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.06em;
+    color: var(--slate);
+    text-transform: uppercase;
+    margin: 14px 0 6px;
+    padding-left: 8px;
+  }
+  .sidebar-title:first-child { margin-top: 0; }
+  .sidebar a {
+    display: block;
+    padding: 5px 8px;
+    border-radius: 6px;
+    color: var(--navy-mid);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  .sidebar a:hover { background: var(--bg-card); }
+  .sidebar a.active {
+    background: var(--research-bg);
+    color: var(--research);
+    font-weight: 700;
+  }
+
+  /* Hero */
+  .hero {
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 16px;
+    margin-bottom: 26px;
+  }
+  .kicker {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 750;
+    color: var(--research);
+    letter-spacing: 0.04em;
+  }
+  .hero h1 {
+    margin: 5px 0 8px;
+    font-size: 25px;
+    line-height: 1.3;
+    color: var(--navy-dark);
+  }
+  .hero .lead {
+    margin: 0;
+    color: #3a4654;
+    font-size: 14px;
+  }
+  .meta-row {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--slate);
+  }
+  .meta-chip {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 9px;
+  }
+
+  /* Section Styling */
+  section.doc-sec {
+    margin: 0 0 34px;
+    scroll-margin-top: 70px;
+  }
+  .sec-num {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--research);
+    text-transform: uppercase;
+  }
+  section.doc-sec > h2 {
+    margin: 2px 0 12px;
+    font-size: 19px;
+    color: var(--navy-dark);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    margin: 18px 0 8px;
+    font-size: 15px;
+    color: var(--navy);
+  }
+  p { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 12px; padding-left: 1.3em; }
+  li { margin: 4px 0; }
+
+  /* Principle 3-Column Grid */
+  .tri-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 14px 0 16px;
+  }
+  .tri-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 14px;
+    background: var(--bg-card);
+  }
+  .tri-card .tri-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--navy);
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .tri-card h4 { margin: 0 0 6px; font-size: 14.5px; color: var(--navy-dark); }
+  .tri-card p { margin: 0; font-size: 13px; color: #334155; line-height: 1.55; }
+
+  /* Tables */
+  .tbl-wrap { overflow-x: auto; margin: 10px 0 16px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    vertical-align: top;
+    text-align: left;
+  }
+  th {
+    background: var(--bg-head);
+    color: var(--navy-dark);
+    font-weight: 700;
+  }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    background: #eef3f9;
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--navy-dark);
+  }
+
+  /* Callout */
+  .callout {
+    margin: 12px 0 16px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--research-border);
+    background: var(--research-bg);
+    font-size: 13.5px;
+  }
+  .callout.gold { background: var(--gold-bg); border-color: var(--gold-border); }
+  .callout.danger { background: var(--red-bg); border-color: var(--red-border); }
+  .callout-title { font-weight: 750; margin-bottom: 4px; color: var(--navy-dark); }
+
+  /* Case Critique Cards */
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 12px 0;
+  }
+  .case-box {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 15px;
+    background: #fff;
+  }
+  .case-box-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .case-box h4 { margin: 0; font-size: 14.5px; color: var(--navy-dark); }
+  .case-box .verdict { font-size: 11.5px; font-weight: 700; color: var(--slate); }
+  .case-box ul { margin: 0; padding-left: 1.15em; font-size: 13px; }
+  .case-box li { margin: 4px 0; }
+
+  /* Parameter Cards */
+  .param-group-title {
+    margin: 18px 0 8px;
+    padding: 6px 11px;
+    background: var(--bg-card);
+    border-left: 3.5px solid var(--research);
+    border-radius: 0 6px 6px 0;
+    font-size: 13.8px;
+    font-weight: 750;
+    color: var(--navy-dark);
+  }
+
+  /* Interactive Simulator */
+  .sim-panel {
+    border: 1.5px solid var(--research-border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 18px rgba(29, 63, 115, 0.06);
+  }
+  .sim-head {
+    background: linear-gradient(135deg, #1d3f73, #312e81);
+    color: #fff;
+    padding: 14px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .sim-head h3 { margin: 0; color: #fff; font-size: 16px; }
+  .sim-head p { margin: 2px 0 0; font-size: 12.5px; opacity: 0.9; }
+  .preset-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 12px 16px;
+    background: #f8fafd;
+    border-bottom: 1px solid var(--border);
+  }
+  .preset-btn {
+    font: inherit;
+    font-size: 12.3px;
+    font-weight: 650;
+    padding: 6px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--navy-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .preset-btn:hover { background: var(--research-bg); border-color: var(--research-border); }
+  .preset-btn.active {
+    background: var(--research);
+    border-color: var(--research);
+    color: #fff;
+  }
+
+  .sim-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ctrl-item {
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #fbfdff;
+  }
+  .ctrl-item label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--navy-dark);
+    margin-bottom: 5px;
+  }
+  .ctrl-item select {
+    width: 100%;
+    font: inherit;
+    font-size: 12.8px;
+    padding: 6px 8px;
+    border: 1px solid #c5d0de;
+    border-radius: 6px;
+    background: #fff;
+    color: var(--text);
+  }
+  .ctrl-desc {
+    margin-top: 4px;
+    font-size: 11.6px;
+    color: var(--slate);
+    line-height: 1.4;
+  }
+
+  .sim-results {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .sim-case {
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+    background: #fff;
+  }
+  .sim-case.shifted {
+    border-color: var(--research);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.12);
+  }
+  .sim-case-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .sim-case-title { font-weight: 750; font-size: 14px; color: var(--navy-dark); }
+  .shift-badge {
+    font-size: 11px;
+    font-weight: 750;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #eef3f9;
+    color: var(--slate);
+  }
+  .shift-badge.changed {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+  }
+  .grade-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    margin: 8px 0;
+  }
+  .grade-pill {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 6px;
+  }
+  .g-certain { background: #fee2e2; color: #991b1b; }
+  .g-probable { background: #ffedd5; color: #9a3412; }
+  .g-possible { background: #fef9c3; color: #854d0e; }
+  .g-unlikely { background: #e2e8f0; color: #334155; }
+  .sev-serious { background: #fce7f3; color: #9d174d; font-size: 11.5px; font-weight: 750; padding: 3px 8px; border-radius: 6px; }
+  .sev-non { background: #f1f5f9; color: #475569; font-size: 11.5px; font-weight: 650; padding: 3px 8px; border-radius: 6px; }
+  .score-line { font-size: 12px; color: var(--slate); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+  .sim-note { font-size: 12.2px; color: #334155; line-height: 1.48; margin: 0; }
+
+  /* JSON Schema Preview */
+  .json-box {
+    border-top: 1px solid var(--border);
+    padding: 14px 16px;
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+  .json-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .json-top span { font-size: 12px; font-weight: 700; color: #93c5fd; }
+  .json-copy {
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #475569;
+    background: #1e293b;
+    color: #f8fafc;
+    cursor: pointer;
+  }
+  .json-copy:hover { background: #334155; }
+  pre#jsonOut {
+    margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-x: auto;
+    color: #e2e8f0;
+  }
+
+  /* Architecture Diagram */
+  .arch-flow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 14px 0 16px;
+  }
+  .arch-step {
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px;
+    background: var(--bg-card);
+  }
+  .arch-step .step-k {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--research);
+    margin-bottom: 4px;
+  }
+  .arch-step h4 { margin: 0 0 5px; font-size: 13.5px; color: var(--navy-dark); }
+  .arch-step p { margin: 0; font-size: 12.2px; color: #334155; line-height: 1.48; }
+
+  @media (max-width: 980px) {
+    .shell { grid-template-columns: 1fr; padding: 14px 14px 48px; }
+    .sidebar { display: none; }
+    .tri-grid, .case-grid, .sim-controls, .sim-results, .arch-flow { grid-template-columns: 1fr; }
+    .research-tag { margin-left: 0; }
+  }
+  @media print {
+    .research-strip, .toolbar, .sidebar, .preset-bar, .sim-controls, .json-copy { display: none !important; }
+    .shell { display: block; padding: 0; max-width: none; }
+    .case-box, .sim-case { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="research-strip">
+  <strong>RESEARCH DRAFT (연구용)</strong> — 본 문서는 ADR 인과성 평가 봇의 주관성 제어 및 정책 파라미터(Policy Settings) 설계를 위한 연구 노트이며, 실제 임상 진단·규제 판정을 대체하지 않습니다.
+</div>
+
+<header class="toolbar">
+  <div class="toolbar-inner">
+    <a class="nav-pill" href="index.html">← 원본 강의 전체</a>
+    <a class="nav-pill" href="summary.html">핵심 요약</a>
+    <a class="nav-pill" href="#sec-sim">★ 정책 시뮬레이터</a>
+    <button type="button" class="btn" id="btnPrint">인쇄 / PDF</button>
+    <span class="research-tag">연구용 · ADR Bot Spec v0.1</span>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" aria-label="연구 문서 목차">
+    <div class="sidebar-title">ADR 평가 봇 연구 노트</div>
+    <a href="#sec-1">1. 문제 제기 &amp; 3대 분리 원칙</a>
+    <a href="#sec-2">2. 권위 기관 실제 평가 기준</a>
+    <a href="#sec-3">3. 2강 4개 사례 비판적 해부</a>
+    <a href="#sec-4">4. 주관성 세팅값 12대 축</a>
+    <a href="#sec-sim">5. ★ 정책 시뮬레이터 &amp; JSON</a>
+    <a href="#sec-6">6. 봇 아키텍처 &amp; UX 제안</a>
+  </aside>
+
+  <main>
+    <section class="hero">
+      <p class="kicker">RESEARCH NOTE · PHARMACOVIGILANCE CAUSALITY BOT</p>
+      <h1>ADR 인과성 평가 봇 설계를 위한 주관성·정책 세팅값 분석</h1>
+      <p class="lead">약물이상반응(ADR) 인과성 평가는 평가자·기관·목적에 따라 결과가 달라지는 고질적인 <strong>평가자 간 변이(Inter-rater variability)</strong>를 가집니다. 본 연구 노트는 제4차 약물부작용 심화교육 2강 사례 분석과 국제 규제기관(ICH·FDA·EMA·WHO-UMC·KIDS) 기준을 토대로, <strong>평가 봇이 단일 정답을 강요하지 않고 사용자가 정책 세팅값을 명시적으로 선택할 수 있게 하는 12개 파라미터와 실시간 시뮬레이터</strong>를 정리합니다.</p>
+      <div class="meta-row">
+        <span class="meta-chip">목적: 연구용 · 봇 정책 스키마 설계</span>
+        <span class="meta-chip">참조: 2강 4개 증례 · WHO-UMC · ICH E2A/E2D · EMA GVP VI · FDA · KIDS</span>
+      </div>
+    </section>
+
+    <!-- SECTION 1 -->
+    <section class="doc-sec" id="sec-1">
+      <div class="sec-num">Section 01</div>
+      <h2>문제 제기: 왜 단일 정답 ADR 평가 봇은 배포하기 어려운가?</h2>
+      <p>임상 현장의 ADR 평가에는 수학적 참값(Gold standard)이 존재하지 않습니다. 동일한 의무기록을 놓고도 <strong>① 어떤 도구를 쓰는지</strong>(WHO-UMC vs 한국형 알고리즘 vs Naranjo vs RUCAM), <strong>② 병용약·기저질환을 얼마나 엄격하게 배제하는지</strong>, <strong>③ 단회 투여나 응급처치 후 회복을 Dechallenge로 인정하는지</strong>에 따라 <code>Probable</code>과 <code>Possible</code>, 심지어 <code>Unlikely</code>까지 갈립니다.</p>
+      <p>따라서 봇을 설계할 때 가장 먼저 해야 할 일은 <strong>목적이 다른 세 가지 행위를 분리</strong>하고, 평가 단계의 주관적 판단 축을 <strong>명시적 설정값(Configurable Policy)</strong>으로 외부화하는 것입니다.</p>
+
+      <div class="tri-grid">
+        <div class="tri-card">
+          <span class="tri-tag">1단계 · Reporting</span>
+          <h4>부작용 보고 (KAERS / FDA / EMA)</h4>
+          <p><strong>원칙: 최대한 넓게 수집.</strong> ICH E2D·EMA GVP VI의 <em>Implied Causality</em> 원칙상 의심되는 자발 보고는 임의로 누락하지 않으며, 병용약이 겹치면 <strong>복수 의심약(Suspect)</strong>으로 기재합니다.</p>
+        </div>
+        <div class="tri-card">
+          <span class="tri-tag">2단계 · Causality</span>
+          <h4>인과성 평가 (WHO-UMC / 패널 합의)</h4>
+          <p><strong>원칙: 냉정하고 보수적으로.</strong> 실제 Dechallenge 여부와 대체원인(출혈·감염·병용약)을 엄격히 검증하며, 확신이 부족하면 억지로 올리지 않고 <code>Possible</code>에 둡니다.</p>
+        </div>
+        <div class="tri-card">
+          <span class="tri-tag">3단계 · Labeling</span>
+          <h4>환자 알레르기 라벨링 (7·12강)</h4>
+          <p><strong>원칙: 가장 신중하게.</strong> 막연한 <code>Possible</code>로 β-lactam 금기 라벨을 달면 수술부위감염·MSSA 사망률·내성균이 증가하므로, 보고와 라벨링은 반드시 분리해야 합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="doc-sec" id="sec-2">
+      <div class="sec-num">Section 02</div>
+      <h2>권위 있는 기관들은 실제로 어떻게 평가하는가?</h2>
+      <p>실제 글로벌 규제당국과 공적 심사기관은 <strong>범용 점수표(한국형·Naranjo)의 기계적 총점으로 최종 결정을 내리지 않습니다.</strong> 기관별 실제 운영 방식은 다음과 같습니다.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>기관 / 표준</th>
+              <th>평가 방식</th>
+              <th>병용약 · 불확실성 처리 원칙</th>
+              <th>봇 설계 시사점</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ICH E2A / E2D<br>FDA · EMA GVP VI</strong></td>
+              <td><strong>이분법 (Binary)</strong><br>Related vs Not Related<br>(<code>Reasonable possibility</code>)</td>
+              <td>자발적 보고는 <strong>Implied Causality</strong>로 간주(보고 누락 방지). 점수표 비권장. 개연성 있는 병용약은 <strong>모두 Suspect로 복수 기재</strong>.</td>
+              <td>규제 보고용 프리셋은 6단계 대신 이분법 + 복수 의심약 모드를 지원해야 함.</td>
+            </tr>
+            <tr>
+              <td><strong>WHO-UMC</strong></td>
+              <td><strong>총체적 판단</strong><br>(Global Introspection, 6단계)</td>
+              <td><code>Certain</code>=타 원인 0%(<em>cannot be explained</em>) / <code>Probable</code>=타 원인 가능성 적음(<em>unlikely</em>) + <strong>실제 Dechallenge 필수</strong> / <code>Possible</code>=타 원인 설명 가능 OR Dechallenge 불명확.</td>
+              <td><code>Probable</code>은 병용약 가능성 0%를 요구하지 않으나, Dechallenge 부재 시 <code>Possible</code> 하향이 정석.</td>
+            </tr>
+            <tr>
+              <td><strong>국내 KIDS<br>(피해구제 심사)</strong></td>
+              <td><strong>WHO-UMC + 다학제<br>전문위원회 합의</strong></td>
+              <td>개별 점수표 합산이 아닌 의무기록·약동학·역학근거(Bradford-Hill 등)를 종합해 전문위 합의 판정.</td>
+              <td>봇은 단일 점수보다 <strong>근거·반론 요약 리포트</strong>를 생성해 인간 전문가(HITL) 합의를 지원해야 함.</td>
+            </tr>
+            <tr>
+              <td><strong>장기별 전용 도구</strong></td>
+              <td>DILI: <strong>RUCAM / DILIN 합의</strong><br>SCAR: <strong>ALDEN / RegiSCAR</strong><br>백신: <strong>WHO AEFI</strong></td>
+              <td>다제 항결핵제(DILI)나 다약제 노출 SJS/TEN처럼 범용 도구가 무력한 영역에서는 약물 반감기·특이 패턴 기반 전용 기준 사용.</td>
+              <td>봇 내부에 <strong>장기·반응 유형별 라우터(Router)</strong>를 두고 DILI/SCAR/백신 전용 모듈 분기 필요.</td>
+            </tr>
+            <tr>
+              <td><strong>범용 점수표<br>(한국형 v2.0 · Naranjo)</strong></td>
+              <td>항목별 가감점 합산</td>
+              <td>평가자 간 일관성은 높으나, 단회 투여·첫 주입 특이반응·응급처치 병행 시 점수가 왜곡되고 병용약 항목이 극단적 양분(<code>+2</code> vs <code>-3</code>).</td>
+              <td>최종 결정기가 아닌 <strong>항목 누락 방지용 보조 체크리스트</strong>로 활용하고 오버라이드 규칙 명시.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="doc-sec" id="sec-3">
+      <div class="sec-num">Section 03</div>
+      <h2>2강 4개 케이스 스터디 비판적 해부 (토론 요약)</h2>
+      <p>제4차 심화교육 2강(<a href="index.html#lec2">원본 2강 보기 ↗</a>)의 4개 사례를 세밀히 검토한 결과, <strong>임상적 직관으로 등급을 먼저 정한 뒤 한국형 알고리즘 점수를 결론에 맞춰 부여하는 패턴</strong>이 1·3·4번에서 확인되었습니다. 바로 이 지점들이 ADR 평가 봇에서 설정값으로 분리해야 할 핵심 변수들입니다.</p>
+
+      <div class="case-grid">
+        <div class="case-box">
+          <div class="case-box-head">
+            <h4>사례 1. Daratumumab → IRR</h4>
+            <span class="verdict">강의: Probable (10점) / Non-serious</span>
+          </div>
+          <ul>
+            <li><strong>합리적 측면</strong>: 코막힘·오한·발열·SpO2 저하·저혈압이 증속(50→200 cc/hr)과 맞물린 전형적 1st-dose IRR. 4증상을 <strong>하나의 증후군(IRR)</strong>으로 묶어 Bortezomib SC 등 병용약 가능성을 낮춘 점은 임상적으로 타당.</li>
+            <li><strong>허점 ① Dechallenge(+3) 오류</strong>: 실제로 중단한 적 없이 <strong>00:00까지 완료 투여</strong>했고, 00:15 BP 80/35는 종료 후 악화 + NS 1L·Hydrocortisone·O2로 회복 → 순수 Dechallenge는 <code>0점</code>.</li>
+            <li><strong>허점 ② 중증도 과소평가</strong>: 초기 호전 후 재발(18:25→21:15→00:15 BP 80/35)은 CTCAE v5.0 IRR <strong>Grade 3</strong> 기준(<em>recurrence after initial improvement</em>) 및 Serious 검토 대상.</li>
+            <li><strong>허점 ③ 병용약 경계선</strong>: 같은 날 새 약 7종(특히 15:30 Bortezomib SC) 동시 첫 투여 → 허가사항 기준 엄격 적용 시 <code>Possible</code> 가능.</li>
+          </ul>
+        </div>
+
+        <div class="case-box">
+          <div class="case-box-head">
+            <h4>사례 2. Pyrazinamide → 간독성</h4>
+            <span class="verdict">강의: Probable (12점→보정) / Serious</span>
+          </div>
+          <ul>
+            <li><strong>합리적 측면 (4건 중 최우수)</strong>: 한국형 총점이 12점(Certain 구간)임에도 <strong>PZA 미재투여</strong>를 이유로 WHO-UMC 기준에 맞춰 <strong>Probable로 하향 보정</strong>한 점은 교과서적.</li>
+            <li><strong>아쉬운 점 ① 단계적 증량 내성 착시</strong>: INH/RFP가 실제 원인이어도 소량 단계 증량(RFP 150→450, INH 100→300) + 실리만 유지 시 내성(adaptation)으로 간수치가 안 오를 수 있어 병용약 단독 배제(<code>+2</code>)는 다소 강한 해석.</li>
+            <li><strong>아쉬운 점 ② Lansoprazole 배제 근거 누락</strong>: 4/28~5/6 Lansoprazole 유지 중 LFT 정상화(31/39)라는 핵심 배제 논리를 명시했으면 완벽.</li>
+            <li><strong>미세 오류</strong>: AST 319(&gt;5×ULN, G3)이나 ALT 173~185(ULN 40 기준 ~4.6×ULN, G2)인데 "둘 다 5배 초과"로 설명.</li>
+          </ul>
+        </div>
+
+        <div class="case-box">
+          <div class="case-box-head">
+            <h4>사례 3. Fosaprepitant → 두드러기</h4>
+            <span class="verdict">강의: Certain (16점) / Non-serious</span>
+          </div>
+          <ul>
+            <li><strong>합리적 측면</strong>: Ramosetron→Palonosetron 교체 후 재발, Palonosetron 단독 무증상, 저속 주입 후 경미 재발로 교차 배제와 재투여 양성이 완결된 <strong>Certain</strong> 사례.</li>
+            <li><strong>허점 ① 과거력(+1) + 재투약(+3) 이중 계산</strong>: 원래 Allergy(-) 첫 노출이었으나 C1~C3 연속 에피소드를 과거력과 재투약 양쪽에 중복 가산(1점 제외해도 15점 Certain).</li>
+            <li><strong>허점 ② Dechallenge 교란</strong>: C1·C2-1은 항히스타민+스테로이드 투여 후 잔여 주입을 완료했는데 무증상. 순수 자연 호전 근거는 처치 없이 30분 만에 가라앉은 C3-1 쪽.</li>
+          </ul>
+        </div>
+
+        <div class="case-box">
+          <div class="case-box-head">
+            <h4>사례 4. Pethidine → 어지러움</h4>
+            <span class="verdict">강의: Possible (5점) / Non-serious</span>
+          </div>
+          <ul>
+            <li><strong>허점 ① 단회 IV 주사에 Dechallenge(+3) 부여</strong>: <code>03:00 Pethidine 50 mg IV</code>는 단회 주사라 중단 자체가 불가하며, 30분 만의 호전은 <strong>NS 1L 수액</strong> 효과. 1~4.5시간 뒤 BP 89/60 → 69/42로 <strong>오히려 악화</strong> → <code>0점</code> 또는 <code>-2점</code>이 타당(총점 5점 → <code>2점</code> 또는 <code>0점 Unlikely</code>).</li>
+            <li><strong>허점 ② 지배적 비약물 원인</strong>: 투여 30분 전 이미 질출혈·혈종 제거·V/S 변화(94/69-94)가 있었고 <strong>Hb 11.5 → 7.9 → 6.3(2회 수혈)</strong>의 산후 급성 실혈 상황.</li>
+            <li><strong>허점 ③ 핵심 병용약 누락</strong>: 02:30 재시작한 경막외마취에서 Fentanyl만 조회하고 교감신경 차단 저혈압의 진짜 주범인 <strong>Ropivacaine</strong>을 누락. 권위 패널에서는 <strong>Unlikely</strong> 우세.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="doc-sec" id="sec-4">
+      <div class="sec-num">Section 04</div>
+      <h2>ADR 평가 봇의 ‘주관성 세팅값’ 12대 축 (Configurable Policy Taxonomy)</h2>
+      <p>평가자 간 이견이 발생하는 지점을 분석하면 아래 <strong>4개 그룹 · 12개 정책 파라미터</strong>로 구조화할 수 있습니다. 봇 배포 시 이 설정을 사용자(병원·지역센터·제약사·연구자)가 선택하게 만들면 <strong>"왜 이 등급이 나왔는가"에 대한 투명성과 재현성</strong>을 동시에 확보할 수 있습니다.</p>
+
+      <div class="param-group-title">Group A. 평가 프레임워크 &amp; 운영 목적 (Framework &amp; Purpose)</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>파라미터 키</th><th>설정 항목</th><th>선택지 (Options)</th><th>판정에 미치는 영향</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>primary_framework</code></td>
+              <td>기본 평가 체계</td>
+              <td><code>who_umc</code> / <code>korean_v2</code> / <code>naranjo</code> / <code>ich_binary</code> / <code>organ_auto</code>(DILI→RUCAM, SJS→ALDEN, 백신→AEFI)</td>
+              <td>출력 등급 체계(6단계 vs 이분법)와 전용 규칙 적용 여부를 결정.</td>
+            </tr>
+            <tr>
+              <td><code>algorithm_override</code></td>
+              <td>점수표 vs 임상 판단 충돌</td>
+              <td><code>who_override</code>(미재투여 시 Certain 하향 등) / <code>raw_score</code>(알고리즘 총점 그대로) / <code>conservative_min</code>(둘 중 낮은 등급)</td>
+              <td>사례 2(12점)에서 <code>Certain</code> vs <code>Probable</code> 분기.</td>
+            </tr>
+            <tr>
+              <td><code>multi_suspect_mode</code></td>
+              <td>다약제 의심약 처리</td>
+              <td><code>single_primary</code>(최유력 1종 선정) / <code>multi_suspect</code>(개연성 있는 약물 모두 Suspect 지정)</td>
+              <td>규제 보고(FDA/EMA/KAERS) 호환성 및 병용약 누락 방지.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="param-group-title">Group B. 병용약 · 기저질환 · 증상 해석 (Confounders &amp; Grouping)</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>파라미터 키</th><th>설정 항목</th><th>선택지 (Options)</th><th>판정에 미치는 영향</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>concomitant_criterion</code></td>
+              <td><strong>병용약 배제 기준</strong> ★</td>
+              <td><code>strict_label</code>(허가사항·문헌 기재 시 무조건 설명 가능) / <code>clinical_plausibility</code>(타이밍·제형·증후군·지속투여 종합) / <code>ddi_aware</code>(PK/PD 상호작용 별도 가산)</td>
+              <td>다약제 입원·항암 환자에서 <code>Probable</code> vs <code>Possible</code>을 가르는 최대 변수(한국형 <code>+2</code> vs <code>-3</code>, 총 5점 격차).</td>
+            </tr>
+            <tr>
+              <td><code>symptom_grouping</code></td>
+              <td>다중 증상 통합 여부</td>
+              <td><code>syndrome_cluster</code>(동일 기전 증상 통합, 예: IRR) / <code>individual_pt</code>(개별 MedDRA PT별 분리 평가)</td>
+              <td>사례 1에서 통합 시 Daratumumab 특이성 급상승, 분리 시 Bortezomib과 경합.</td>
+            </tr>
+            <tr>
+              <td><code>underlying_weight</code></td>
+              <td>비약물·기저질환 가중치</td>
+              <td><code>strict_alternative</code>(출혈·감염 등 강력 대체원인 시 Unlikely 하향) / <code>conservative_keep</code>(시간 근접성 있으면 Possible 유지)</td>
+              <td>사례 4(산후 출혈 Hb 6.3)에서 <code>Unlikely</code> vs <code>Possible</code> 분기.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="param-group-title">Group C. Dechallenge · Rechallenge · 과거력 (Temporal &amp; Challenge)</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>파라미터 키</th><th>설정 항목</th><th>선택지 (Options)</th><th>판정에 미치는 영향</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>dechallenge_policy</code></td>
+              <td><strong>중단·감량 호전 인정 범위</strong> ★</td>
+              <td><code>strict_pure</code>(실제 중단+반감기 부합 자연 호전만) / <code>moderate_clinical</code>(응급처치 병행 시 조건부 인정, 단회·완료 투여는 0점) / <code>lenient_lecture</code>(단회·종료 후 호전도 +3점)</td>
+              <td>가장 빈번한 오채점 구간. 사례 1·3·4 모두에서 3~5점 변동 유발.</td>
+            </tr>
+            <tr>
+              <td><code>first_dose_rechallenge</code></td>
+              <td>1차 주입 특이반응 재투여 음성</td>
+              <td><code>exempt_zero</code>(단클론항체 IRR 등 약리 특성 반영 0점) / <code>penalize_minus2</code>(기계적 -2점 감점)</td>
+              <td>사례 1처럼 첫 주입에만 생기는 IRR의 과도한 감점 방지 여부.</td>
+            </tr>
+            <tr>
+              <td><code>stepwise_reintro</code></td>
+              <td>단계적 증량 재도입 음성 해석</td>
+              <td><code>rule_out</code>(재도입 무증상 약물 완전 배제) / <code>uncertain_tolerance</code>(탈감작·내성 가능성 고려해 배제 유보)</td>
+              <td>사례 2 항결핵제(INH·RFP 단계증량)의 병용약 배제 강도 결정.</td>
+            </tr>
+            <tr>
+              <td><code>prior_hx_dedup</code></td>
+              <td>과거력–재투약 중복 가산</td>
+              <td><code>disallow</code>(동일 연속 사건은 재투약에만 반영) / <code>allow</code>(과거력 +1, 재투약 +3 동시 가산)</td>
+              <td>사례 3 같은 다주기 항암 반복 반응의 점수 인플레이션 방지.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="param-group-title">Group D. 문헌 근거 · 심각도 · 결측치 (Evidence, Severity &amp; Missing Data)</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>파라미터 키</th><th>설정 항목</th><th>선택지 (Options)</th><th>판정에 미치는 영향</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>novelty_source</code></td>
+              <td>알려진 부작용 근거 범위</td>
+              <td><code>kr_label_only</code>(국내 nedrug 허가사항) / <code>global_ref</code>(FDA·EMA·Micromedex·Lexicomp 포함) / <code>case_and_signal</code>(증례·실마리 포함)</td>
+              <td>신약·오프라벨 사용 시 Novelty 점수(<code>+3</code> / <code>+2</code> / <code>0</code>) 변동.</td>
+            </tr>
+            <tr>
+              <td><code>seriousness_policy</code><br>(+ <code>missing_data</code>)</td>
+              <td>심각도(Serious) &amp; 결측치 정책</td>
+              <td><code>ctcae_g3_serious</code>(법령 5항목 + CTCAE G3 이상 Serious 권고) / <code>narrow_statutory</code>(좁은 법령 해석) · 결측 시 <code>conservative_conditional</code> vs <code>llm_infer</code></td>
+              <td>사례 1(BP 80/35 재발·IV 스테로이드)의 Serious 여부 및 정보 부족 시 환각(추론) 차단.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 5: INTERACTIVE SIMULATOR -->
+    <section class="doc-sec" id="sec-sim">
+      <div class="sec-num">Section 05 · Interactive Research Lab</div>
+      <h2>★ 정책 세팅 시뮬레이터 (2강 4개 사례 실시간 민감도 실험)</h2>
+      <p>아래 프리셋을 누르거나 개별 세팅값을 바꿔 보세요. <strong>동일한 2강 4개 증례의 한국형 알고리즘 점수, WHO-UMC 등급, 심각도 판정이 어떻게 달라지는지</strong> 실시간으로 확인하고, 하단의 봇 정책 JSON을 바로 복사할 수 있습니다.</p>
+
+      <div class="sim-panel">
+        <div class="sim-head">
+          <div>
+            <h3>ADR Policy Sensitivity Simulator</h3>
+            <p>세팅값 변화에 따른 4개 케이스(Daratumumab · Pyrazinamide · Fosaprepitant · Pethidine) 판정 비교</p>
+          </div>
+        </div>
+
+        <div class="preset-bar" role="group" aria-label="정책 프리셋">
+          <button type="button" class="preset-btn active" data-preset="lecture">① 2강 강의 원안 재현</button>
+          <button type="button" class="preset-btn" data-preset="clinical">② 임상 실무형 (권장 균형)</button>
+          <button type="button" class="preset-btn" data-preset="strict">③ 엄격한 규제 · 피해구제형</button>
+          <button type="button" class="preset-btn" data-preset="delabel">④ 초보수적 (과잉 라벨링 방지)</button>
+        </div>
+
+        <div class="sim-controls">
+          <div class="ctrl-item">
+            <label for="p_concomitant">1. 병용약 배제 기준 (<code>concomitant_criterion</code>)</label>
+            <select id="p_concomitant">
+              <option value="clinical_plausibility">임상 개연성 중심 (타이밍·패턴·지속투여 종합)</option>
+              <option value="strict_label">허가사항 엄격 기준 (문헌 기재 병용약 있으면 배제 불가)</option>
+            </select>
+            <div class="ctrl-desc">사례 1(Bortezomib)과 사례 2(INH/RFP/Lansoprazole)에 직접 영향</div>
+          </div>
+
+          <div class="ctrl-item">
+            <label for="p_grouping">2. 다중 증상 처리 (<code>symptom_grouping</code>)</label>
+            <select id="p_grouping">
+              <option value="syndrome_cluster">증후군 통합 (예: 발열+오한+코막힘+저혈압 → IRR)</option>
+              <option value="individual_pt">개별 증상(PT) 분리 평가</option>
+            </select>
+            <div class="ctrl-desc">분리 평가 시 사례 1은 Bortezomib과 증상 4개가 모두 겹침</div>
+          </div>
+
+          <div class="ctrl-item">
+            <label for="p_dechallenge">3. Dechallenge 인정 기준 (<code>dechallenge_policy</code>)</label>
+            <select id="p_dechallenge">
+              <option value="lenient_lecture">관대함 (단회 주사·완료 투여 후 호전도 +3점 — 2강 방식)</option>
+              <option value="moderate_clinical">임상 중립 (실제 중단·처치 회복 인정, 단회/완료 투여는 0점)</option>
+              <option value="strict_pure">엄격함 (순수 중단 자연 호전만 +3점, 악화 시 -2점)</option>
+            </select>
+            <div class="ctrl-desc">사례 1(미중단)·사례 3(처치병행)·사례 4(단회 IV+악화) 분기</div>
+          </div>
+
+          <div class="ctrl-item">
+            <label for="p_underlying">4. 비약물·기저질환 가중치 (<code>underlying_weight</code>)</label>
+            <select id="p_underlying">
+              <option value="conservative_keep">보수적 유지 (시간 근접성 있으면 Possible 허용)</option>
+              <option value="strict_alternative">대체원인 우선 (강력한 출혈·감염 시 Unlikely 하향)</option>
+            </select>
+            <div class="ctrl-desc">사례 4(Hb 11.5→6.3 산후 출혈 + BP 69/42) WHO-UMC 판정 분기</div>
+          </div>
+
+          <div class="ctrl-item">
+            <label for="p_irr">5. 1차 주입 IRR 재투여 음성 (<code>first_dose_rechallenge</code>)</label>
+            <select id="p_irr">
+              <option value="penalize_minus2">기계적 감점 (-2점 적용 — 2강 방식)</option>
+              <option value="exempt_zero">약리 예외 인정 (0점 처리)</option>
+            </select>
+            <div class="ctrl-desc">Daratumumab 등 첫 주입 특이 IRR의 재투여 음성 감점 여부</div>
+          </div>
+
+          <div class="ctrl-item">
+            <label for="p_override">6. 알고리즘 vs WHO-UMC 충돌 &amp; 과거력 중복</label>
+            <select id="p_override">
+              <option value="who_override_allow_dedup">WHO-UMC 보정 + 과거력 중복 허용 (2강 방식)</option>
+              <option value="who_override_no_dedup">WHO-UMC 보정 + 과거력 중복 금지 (권장)</option>
+              <option value="raw_score_no_dedup">알고리즘 원점수 그대로 (보정 없음) + 중복 금지</option>
+            </select>
+            <div class="ctrl-desc">사례 2(12점 미재투여)와 사례 3(과거력+재투약 중복)에 영향</div>
+          </div>
+
+          <div class="ctrl-item" style="grid-column: 1 / -1;">
+            <label for="p_serious">7. 심각도(Serious) &amp; CTCAE 연계 기준 (<code>seriousness_policy</code>)</label>
+            <select id="p_serious">
+              <option value="narrow_statutory">좁은 해석 (즉각 회복 시 Non-serious — 2강 방식)</option>
+              <option value="ctcae_g3_serious">엄격 연계 (CTCAE Grade ≥3·재발성 저혈압 BP 80/35 시 Serious 권고)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sim-results" id="simResults"></div>
+
+        <div class="json-box">
+          <div class="json-top">
+            <span>현재 선택된 ADR 봇 정책 스키마 (policy_config.json)</span>
+            <button type="button" class="json-copy" id="btnCopyJson">JSON 복사</button>
+          </div>
+          <pre id="jsonOut"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section class="doc-sec" id="sec-6">
+      <div class="sec-num">Section 06</div>
+      <h2>ADR 평가 봇 실제 구현 아키텍처 &amp; 배포 전략 제안</h2>
+      <p>주관성 때문에 배포가 망설여진다면, <strong>"LLM이 등급 하나를 딱 찍어주는 봇"</strong>이 아니라 <strong>"명시된 정책 스키마에 따라 근거를 구조화하고, 세팅에 따라 결론이 갈리는 쟁점을 드러내 주는 의사결정 지원 봇(Decision-Support Bot)"</strong>으로 포지셔닝하는 것이 가장 안전하고 설득력 있습니다.</p>
+
+      <div class="arch-flow">
+        <div class="arch-step">
+          <div class="step-k">STAGE 1 · EXTRACT</div>
+          <h4>구조화 타임라인 추출</h4>
+          <p>자유 서술 의무기록에서 약물별 시작/종료/용량/제형, 증상 발현·재발 시각, 검사치, 응급처치를 JSON 타임라인으로 정규화.</p>
+        </div>
+        <div class="arch-step">
+          <div class="step-k">STAGE 2 · RAG</div>
+          <h4>공식 DB 근거 조회</h4>
+          <p>nedrug 허가사항, FDA/EMA 라벨, 반감기, 대표 증후군 패턴(1st-dose IRR 등), DDI DB를 검색해 환각(Hallucination) 차단.</p>
+        </div>
+        <div class="arch-step">
+          <div class="step-k">STAGE 3 · ENGINE</div>
+          <h4>정책 기반 결정론적 평가</h4>
+          <p>선택된 <code>policy_config.json</code>에 따라 한국형/WHO-UMC/RUCAM/ALDEN 규칙을 코드로 계산(LLM의 산술·규칙 오류 차단).</p>
+        </div>
+        <div class="arch-step">
+          <div class="step-k">STAGE 4 · EXPLAIN</div>
+          <h4>민감도 + 양면 리포트</h4>
+          <p>최종 등급과 함께 <strong>"어떤 세팅을 바꾸면 등급이 바뀌는지"</strong>(예: Dechallenge 엄격 적용 시 Probable→Possible)를 자동 경고.</p>
+        </div>
+      </div>
+
+      <div class="callout gold">
+        <div class="callout-title">★ 배포 리스크를 줄이는 핵심 UX 아이디어: "Sensitivity Badge (민감도 표시)"</div>
+        <ul>
+          <li><strong>강건한 판정(Robust)</strong>: 세팅을 바꿔도 결과가 변하지 않음 — 예: 사례 3(Fosaprepitant)은 거의 모든 세팅에서 <code>Certain</code>.</li>
+          <li><strong>경계성 판정(Policy-Sensitive)</strong>: 특정 세팅 1~2개에 따라 등급이 바뀜 — 예: 사례 1(Daratumumab)은 <code>Probable ↔ Possible</code>, 사례 4(Pethidine)는 <code>Possible ↔ Unlikely</code>. 봇이 <strong>"이 사례는 Dechallenge 인정 기준과 병용약 배제 기준에 민감하므로 전문가 확인이 필요합니다"</strong>라고 표시해 주면 오히려 신뢰도가 급상승합니다.</li>
+          <li><strong>면책 및 감사 로그(Audit Trail)</strong>: 모든 평가 결과에 사용된 <code>policy_config.json</code> 버전과 스냅샷을 함께 저장하면, 병원·연구팀 간 일치도(Kappa) 비교 연구 도구로도 바로 활용할 수 있습니다.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(() => {
+  const els = {
+    concomitant: document.getElementById('p_concomitant'),
+    grouping: document.getElementById('p_grouping'),
+    dechallenge: document.getElementById('p_dechallenge'),
+    underlying: document.getElementById('p_underlying'),
+    irr: document.getElementById('p_irr'),
+    override: document.getElementById('p_override'),
+    serious: document.getElementById('p_serious'),
+    results: document.getElementById('simResults'),
+    jsonOut: document.getElementById('jsonOut'),
+    btnCopy: document.getElementById('btnCopyJson'),
+  };
+
+  const PRESETS = {
+    lecture: {
+      concomitant: 'clinical_plausibility',
+      grouping: 'syndrome_cluster',
+      dechallenge: 'lenient_lecture',
+      underlying: 'conservative_keep',
+      irr: 'penalize_minus2',
+      override: 'who_override_allow_dedup',
+      serious: 'narrow_statutory'
+    },
+    clinical: {
+      concomitant: 'clinical_plausibility',
+      grouping: 'syndrome_cluster',
+      dechallenge: 'moderate_clinical',
+      underlying: 'strict_alternative',
+      irr: 'exempt_zero',
+      override: 'who_override_no_dedup',
+      serious: 'ctcae_g3_serious'
+    },
+    strict: {
+      concomitant: 'strict_label',
+      grouping: 'individual_pt',
+      dechallenge: 'strict_pure',
+      underlying: 'strict_alternative',
+      irr: 'penalize_minus2',
+      override: 'who_override_no_dedup',
+      serious: 'ctcae_g3_serious'
+    },
+    delabel: {
+      concomitant: 'strict_label',
+      grouping: 'syndrome_cluster',
+      dechallenge: 'strict_pure',
+      underlying: 'strict_alternative',
+      irr: 'penalize_minus2',
+      override: 'who_override_no_dedup',
+      serious: 'narrow_statutory'
+    }
+  };
+
+  function algGrade(score) {
+    if (score >= 12) return 'Certain';
+    if (score >= 6) return 'Probable';
+    if (score >= 2) return 'Possible';
+    return 'Unlikely';
+  }
+
+  function gradeClass(g) {
+    return 'grade-pill g-' + g.toLowerCase();
+  }
+
+  function evaluateAll(cfg) {
+    const useOverride = cfg.override !== 'raw_score_no_dedup';
+    const allowDedup = cfg.override === 'who_override_allow_dedup';
+
+    // Case 1: Daratumumab IRR (Lecture baseline: Probable, 10, Non-serious)
+    const c1_de = cfg.dechallenge === 'lenient_lecture' ? 3 : 0;
+    const c1_co = (cfg.concomitant === 'clinical_plausibility' && cfg.grouping === 'syndrome_cluster') ? 2 : -3;
+    const c1_re = cfg.irr === 'exempt_zero' ? 0 : -2;
+    const c1_score = 3 + c1_de + 0 + c1_co + 1 + 3 + c1_re + 0;
+    const c1_alg = algGrade(c1_score);
+    let c1_who;
+    if (c1_co < 0) {
+      c1_who = 'Possible';
+    } else if (cfg.dechallenge === 'strict_pure') {
+      c1_who = 'Possible';
+    } else {
+      c1_who = 'Probable';
+    }
+    const c1_sev = cfg.serious === 'ctcae_g3_serious' ? 'Serious' : 'Non-serious';
+    const c1_note = c1_co < 0
+      ? 'Bortezomib SC 등 동시 첫 투여 병용약 배제 불가(-3) → Possible.'
+      : (cfg.dechallenge === 'strict_pure'
+        ? '중단 없이 투여 완료 후 IV 스테로이드·수액 회복(Dechallenge 0) → 엄격 WHO-UMC 기준 Possible.'
+        : `IRR 증후군 통합 및 임상 개연성 반영(Dechallenge ${c1_de >= 0 ? '+' + c1_de : c1_de}, Rechallenge ${c1_re}).`);
+
+    // Case 2: Pyrazinamide Hepatotoxicity (Lecture baseline: Probable, 12->Probable, Serious)
+    const c2_co = cfg.concomitant === 'clinical_plausibility' ? 2 : -3;
+    const c2_score = 3 + 3 + 0 + c2_co + 1 + 3 + 0 + 0;
+    const c2_alg = algGrade(c2_score);
+    let c2_who;
+    if (c2_co < 0) {
+      c2_who = 'Possible';
+    } else {
+      c2_who = useOverride ? 'Probable' : c2_alg;
+    }
+    const c2_sev = 'Serious';
+    const c2_note = c2_co < 0
+      ? 'INH·RFP·Lansoprazole 등 간독성 병용약 허가사항 기재(-3) 및 단계증량 내성 가능성 → Possible.'
+      : (useOverride
+        ? '한국형 12점(Certain 구간)이나 PZA 미재투여로 WHO-UMC 보정 → Probable.'
+        : '오버라이드 미적용 시 알고리즘 총점 12점 그대로 Certain 출력(위험 신호!).');
+
+    // Case 3: Fosaprepitant Urticaria (Lecture baseline: Certain, 16, Non-serious)
+    const c3_de = cfg.dechallenge === 'strict_pure' ? 0 : 3;
+    const c3_hx = allowDedup ? 1 : 0;
+    const c3_score = 3 + c3_de + c3_hx + 2 + 1 + 3 + 3 + 0;
+    const c3_alg = algGrade(c3_score);
+    const c3_who = 'Certain';
+    const c3_sev = 'Non-serious';
+    const c3_note = allowDedup
+      ? '과거력(+1)·재투약(+3) 중복 가산으로 16점. 세팅과 무관하게 Certain 유지(강건한 판정).'
+      : `중복 가산 제거(과거력 0, Dechallenge +${c3_de}) → 총 ${c3_score}점, 여전히 Certain 유지(강건한 판정).`;
+
+    // Case 4: Pethidine Dizziness (Lecture baseline: Possible, 5, Non-serious)
+    const c4_de = cfg.dechallenge === 'lenient_lecture' ? 3 : (cfg.dechallenge === 'moderate_clinical' ? 0 : -2);
+    const c4_score = 3 + c4_de + 0 - 3 - 1 + 3 + 0 + 0;
+    const c4_alg = algGrade(c4_score);
+    const c4_who = (cfg.underlying === 'strict_alternative' || c4_alg === 'Unlikely') ? 'Unlikely' : 'Possible';
+    const c4_sev = 'Non-serious';
+    const c4_note = c4_who === 'Unlikely'
+      ? `단회 IV 주사(Dechallenge ${c4_de}) + 산후 급성 실혈(Hb 6.3·BP 69/42) + 경막외 Ropivacaine 우세 → Unlikely.`
+      : `시간적 근접성 유지 및 Dechallenge(${c4_de >= 0 ? '+' + c4_de : c4_de}) 반영 → Possible.`;
+
+    return [
+      { id: 1, name: '사례 1 · Daratumumab (IRR)', baseWho: 'Probable', baseSev: 'Non-serious', score: c1_score, alg: c1_alg, who: c1_who, sev: c1_sev, note: c1_note },
+      { id: 2, name: '사례 2 · Pyrazinamide (간독성)', baseWho: 'Probable', baseSev: 'Serious', score: c2_score, alg: c2_alg, who: c2_who, sev: c2_sev, note: c2_note },
+      { id: 3, name: '사례 3 · Fosaprepitant (두드러기)', baseWho: 'Certain', baseSev: 'Non-serious', score: c3_score, alg: c3_alg, who: c3_who, sev: c3_sev, note: c3_note },
+      { id: 4, name: '사례 4 · Pethidine (어지러움)', baseWho: 'Possible', baseSev: 'Non-serious', score: c4_score, alg: c4_alg, who: c4_who, sev: c4_sev, note: c4_note },
+    ];
+  }
+
+  function currentConfig() {
+    return {
+      concomitant: els.concomitant.value,
+      grouping: els.grouping.value,
+      dechallenge: els.dechallenge.value,
+      underlying: els.underlying.value,
+      irr: els.irr.value,
+      override: els.override.value,
+      serious: els.serious.value,
+    };
+  }
+
+  function render() {
+    const cfg = currentConfig();
+    const rows = evaluateAll(cfg);
+
+    els.results.innerHTML = rows.map(r => {
+      const whoChanged = r.who !== r.baseWho;
+      const sevChanged = r.sev !== r.baseSev;
+      const shifted = whoChanged || sevChanged;
+      const badgeText = shifted
+        ? (whoChanged ? `원안 ${r.baseWho} → ${r.who}` : `심각도 ${r.baseSev} → ${r.sev}`)
+        : '2강 원안과 동일';
+      return `
+        <div class="sim-case ${shifted ? 'shifted' : ''}">
+          <div class="sim-case-top">
+            <span class="sim-case-title">${r.name}</span>
+            <span class="shift-badge ${shifted ? 'changed' : ''}">${badgeText}</span>
+          </div>
+          <div class="grade-row">
+            <span class="${gradeClass(r.who)}">최종: ${r.who}</span>
+            <span class="${r.sev === 'Serious' ? 'sev-serious' : 'sev-non'}">${r.sev}</span>
+          </div>
+          <div class="score-line">한국형 알고리즘: <strong>${r.score}점</strong> (${r.alg})</div>
+          <p class="sim-note">${r.note}</p>
+        </div>
+      `;
+    }).join('');
+
+    const schema = {
+      schema_version: "0.1-research",
+      primary_framework: "who_umc_with_korean_v2_checklist",
+      multi_suspect_mode: cfg.concomitant === "strict_label" ? "multi_suspect" : "single_primary_with_concomitant_notes",
+      concomitant_criterion: cfg.concomitant,
+      symptom_grouping: cfg.grouping,
+      dechallenge_policy: cfg.dechallenge,
+      underlying_weight: cfg.underlying,
+      first_dose_rechallenge: cfg.irr,
+      algorithm_override: cfg.override === "raw_score_no_dedup" ? "raw_score" : "who_override",
+      prior_hx_rechallenge_dedup: cfg.override === "who_override_allow_dedup" ? "allow" : "disallow",
+      seriousness_policy: cfg.serious,
+      output_mode: "grade_plus_sensitivity_warnings"
+    };
+    els.jsonOut.textContent = JSON.stringify(schema, null, 2);
+  }
+
+  // Preset buttons
+  const presetBtns = Array.from(document.querySelectorAll('.preset-btn'));
+  presetBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = PRESETS[btn.dataset.preset];
+      if (!p) return;
+      Object.keys(p).forEach(k => { els[k].value = p[k]; });
+      presetBtns.forEach(b => b.classList.toggle('active', b === btn));
+      render();
+    });
+  });
+
+  // Select change clears preset active unless exact match
+  ['concomitant', 'grouping', 'dechallenge', 'underlying', 'irr', 'override', 'serious'].forEach(k => {
+    els[k].addEventListener('change', () => {
+      const cur = currentConfig();
+      presetBtns.forEach(b => {
+        const p = PRESETS[b.dataset.preset];
+        const match = Object.keys(p).every(pk => p[pk] === cur[pk]);
+        b.classList.toggle('active', match);
+      });
+      render();
+    });
+  });
+
+  els.btnCopy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(els.jsonOut.textContent);
+      els.btnCopy.textContent = '복사됨 ✓';
+      setTimeout(() => { els.btnCopy.textContent = 'JSON 복사'; }, 1600);
+    } catch (_) {
+      els.btnCopy.textContent = '복사 실패';
+      setTimeout(() => { els.btnCopy.textContent = 'JSON 복사'; }, 1600);
+    }
+  });
+
+  document.getElementById('btnPrint').addEventListener('click', () => window.print());
+
+  // Sidebar scroll tracking
+  const secs = Array.from(document.querySelectorAll('section.doc-sec'));
+  const navLinks = Array.from(document.querySelectorAll('.sidebar a'));
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-80px 0px -65% 0px', threshold: 0 });
+  secs.forEach(s => obs.observe(s));
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -68,6 +68,20 @@
     background: var(--bg-card);
   }
   .toolbar a.back-link:hover { background: #e8eff8; }
+  .toolbar a.research-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    color: #4f46e5;
+    font-weight: 650;
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 1px solid #a5b4fc;
+    border-radius: 7px;
+    background: #eef2ff;
+  }
+  .toolbar a.research-link:hover { background: #e0e7ff; }
   .search-wrap {
     display: flex;
     align-items: center;
@@ -560,6 +574,7 @@
 <header class="toolbar">
   <div class="toolbar-inner">
     <a class="back-link" href="index.html" title="전체 슬라이드·녹취 정리로 이동">← 원본 강의 전체</a>
+    <a class="research-link" href="research.html" title="연구용: ADR 인과성 평가 봇 정책 세팅 설계 노트">연구용</a>
     <form class="search-wrap" id="searchForm" role="search">
       <input id="q" type="search" placeholder="약물·유전자·기준치 검색 (예: HLA, Hy's, 메트포르민)" aria-label="검색" autocomplete="off" spellcheck="false">
       <button type="button" class="btn" id="qPrev" title="이전 결과">이전</button>
