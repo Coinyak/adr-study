@@ -1276,6 +1276,36 @@
         <div class="callout-title">★ 약물명 자동 안전 가드레일</div>
         <p style="margin:0;">사용자가 <code>성분명만</code> 옵션을 골랐더라도 <strong>바이오의약품 · 바이오시밀러 · 백신 · 조영제 · 복합제</strong>가 감지되면, 봇이 자동으로 <em>"추적성을 위해 제품명(+Lot) 병기가 권장되는 품목입니다"</em> 칩을 띄워 누락을 방지합니다.</p>
       </div>
+
+      <h3>6) 투약 기간 · 용량 변경 · 제품 전환 · 지속 투여 · 부분 날짜 처리 규칙</h3>
+      <p>실제 병원 처방에서는 증량·제네릭 전환·지속 복용·애매한 타원 복용력이 흔합니다. <strong>ICH E2B(R3) <code>G.k.4.r</code> 구조</strong>와 인과성 평가 논리를 일치시키기 위해 아래 4가지 엣지케이스 규칙을 봇 데이터 모델에 기본 내장합니다.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>상황</th><th>KAERS / E2B(R3) 공식 입력 규칙</th><th>인과성 평가 &amp; 봇 데이터 모델 설계</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>같은 제품 · 용량 변경</strong><br><em>(예: 노바스크 5→10mg)</em></td>
+              <td>동일 품목(1T→2T)은 약물 1개 아래 <strong>용법 블록(<code>G.k.4.r</code>)을 기간별 반복</strong>. 함량 품목코드가 다르면 별도 행 분리 + 서술문에 증량 이력 기재.</td>
+              <td>약물당 <code>regimen_segments[]</code>(구간 배열) 관리 → Type A(부종·근육통)는 <strong>증량 시점</strong>을, 누적 독성은 <strong>최초 시작일</strong>을 기준점으로 동시 계산.</td>
+            </tr>
+            <tr>
+              <td><strong>같은 성분 · 다른 제품</strong><br><em>(제네릭·바이오시밀러·서방전환)</em></td>
+              <td>품목기준코드가 다르므로 <strong>반드시 별도 의약품 행으로 분리</strong>(부형제·방출속도·면역원성 추적).</td>
+              <td><code>product_id(품목)</code> + <code>ingredient_id(성분)</code> 2계층 관리. 전환 직후 발생 시 <strong>새 제품을 주 의심약</strong>으로, 장기 누적은 동일 성분 연속 노출로 합산 표시.</td>
+            </tr>
+            <tr>
+              <td><strong>지속 투여 예정 (Ongoing)</strong></td>
+              <td>종료일(<code>G.k.4.r.5</code>)에 임의 날짜 절대 금지 → <strong>반드시 공란(Blank)</strong> + <code>G.k.8 약물 조치</code>에 <em>용량 변경 없음/감량/증량</em> 표기.</td>
+              <td><strong>병용약이 지속 투여 중인데 증상 소실</strong> 시 병용약 배제 근거로 자동 태깅(예: 사례 2 Lansoprazole). 의심약 지속 중 소실이면 Dechallenge 불명확.</td>
+            </tr>
+            <tr>
+              <td><strong>기록 애매 · 부분 날짜 · PRN</strong><br><em>("작년 3월경", 타원 처방)</em></td>
+              <td><code>01일</code> 임의 보정 금지! E2B(R3) <strong>부분 날짜</strong>(<code>2024</code>, <code>2024-03</code>) 또는 공란(<code>모름/UNK</code>) + 서술문 원문 유지. PRN은 빈도 <code>필요시</code> + 증상 직전 복용시각 서술.</td>
+              <td>모든 날짜에 <code>precision</code> 태그(<code>exact_time</code> · <code>exact_date</code> · <code>year_month</code> · <code>year_only</code> · <code>approx</code> · <code>unknown</code>) 부여 → 임의 <code>01일</code> 보정 및 날짜 환각 계산 원천 차단.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <!-- SECTION 8 -->
