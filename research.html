@@ -1147,6 +1147,44 @@
           </tbody>
         </table>
       </div>
+
+      <h3>4) 과거력 · 현재 동반질환 · 적응증 · 이상사례 구분 규칙 (E2B R3 추출 기준)</h3>
+      <p>EMR의 <code>PMHx(과거력)</code> 문단에 적힌 제목만 믿고 일괄 분류하면 오차가 커집니다. 봇의 Stage 1 추출기는 반드시 <strong>① 지속 여부(Continuing)</strong>와 <strong>② 의심약 적응증 여부(Indication)</strong>를 기준으로 아래 4칸으로 분리해야 합니다.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>분류</th><th>E2B(R3) / KAERS 입력 위치</th><th>판별 기준 &amp; EMR 함정 주의</th><th>예시</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>① 종료된 과거력</strong><br><em>(Past History)</em></td>
+              <td><code>D.7.1 과거 병력</code> + <strong>지속: 아니오</strong> (+ 종료일)</td>
+              <td>이상사례 발생 전 이미 완치·종료된 질환·수술·과거 알레르기.</td>
+              <td>과거 충수절제술, 과거 결핵 완치, 과거 A약물 알레르기</td>
+            </tr>
+            <tr>
+              <td><strong>② 현재 동반질환</strong><br><em>(Concurrent)</em></td>
+              <td><code>D.7.1 과거 병력</code> + <strong>지속: 예</strong> (종료일 공란)</td>
+              <td>EMR에 <code>PMHx</code>로 적혀 있어도 <strong>현재 약 복용·추적 f/u 중이면 현재 동반질환</strong>. (인과성 평가 시 핵심 비약물요인 후보)</td>
+              <td>고혈압(투약 중), 만성 B형간염(Tenofovir 복용 중), 천식, CKD</td>
+            </tr>
+            <tr>
+              <td><strong>③ 의심약 적응증</strong><br><em>(Indication)</em></td>
+              <td><code>G.k.7 의약품 탭 → 적응증</code></td>
+              <td>이번 의심약을 처방한 <strong>직접 목적</strong>인 현재 질환.</td>
+              <td>다발골수종(Daratumumab), 폐결핵(HREZ)</td>
+            </tr>
+            <tr>
+              <td><strong>④ 새로 생긴 증상</strong><br><em>(Reaction/Event)</em></td>
+              <td><code>E.i 이상사례 탭</code> (D.7.1 기재 금지)</td>
+              <td>투약 이후 새롭게 발생하거나 악화된 약물 의심 반응.</td>
+              <td>Daratumumab 후 저혈압·IRR, HREZ 후 간독성</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <div class="callout-title">봇 추출 3단계 판별 규칙 (LLM 프롬프트 고정 룰)</div>
+        <p style="margin:0;">① 이 질환 때문에 의심약을 처방했는가? → <strong>적응증</strong> &nbsp;|&nbsp; ② 투약 이후 새로 발생·악화했는가? → <strong>이상사례</strong> &nbsp;|&nbsp; ③ 투약 전부터 있었고 현재도 치료·투약·f/u 중인가? → <strong>현재 동반질환(지속=예)</strong>, 완치·종료 시 <strong>과거력(지속=아니오)</strong>.</p>
+      </div>
     </section>
 
     <!-- SECTION 8 -->
