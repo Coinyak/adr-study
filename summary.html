@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제4차 약물부작용 심화교육 — 핵심 요약</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+  :root {
+    --navy: #1d3f73;
+    --navy-dark: #10284d;
+    --navy-mid: #16325c;
+    --slate: #5c6b7a;
+    --border: #d5deea;
+    --border-soft: #e6edf5;
+    --bg-card: #f4f7fb;
+    --bg-table-head: #eef3f9;
+    --gold-bg: #fff6db;
+    --gold-border: #e5b94c;
+    --red-bg: #fdf2f2;
+    --red-border: #d97777;
+    --red-text: #8c1d1d;
+    --green-bg: #eef8f1;
+    --green-border: #5da675;
+    --green-text: #1b5e34;
+    --text: #1c1c1c;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--text);
+    background: #ffffff;
+    font-family: "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14.5px;
+    line-height: 1.66;
+  }
+
+  /* Sticky Top Toolbar */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 18px;
+  }
+  .toolbar-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    align-items: center;
+  }
+  .toolbar a.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    color: var(--navy);
+    font-weight: 650;
+    font-size: 13px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg-card);
+  }
+  .toolbar a.back-link:hover { background: #e8eff8; }
+  .search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1 1 260px;
+    max-width: 440px;
+  }
+  .search-wrap input[type="search"] {
+    flex: 1;
+    min-width: 120px;
+    font: inherit;
+    font-size: 13.5px;
+    padding: 6px 10px;
+    border: 1px solid #c5d0de;
+    border-radius: 7px;
+    color: var(--navy-mid);
+    background: #fff;
+  }
+  .search-wrap input:focus { outline: 2px solid rgba(29, 63, 115, 0.25); border-color: var(--navy); }
+  .btn {
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 550;
+    padding: 6px 10px;
+    border: 1px solid #c5d0de;
+    border-radius: 7px;
+    background: var(--bg-card);
+    color: var(--navy-mid);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .btn:hover { background: #e8eff8; }
+  .btn[aria-pressed="true"] {
+    background: #ffe39a;
+    border-color: #d9a426;
+    color: #2c1e00;
+    font-weight: 700;
+  }
+  .count {
+    font-size: 12px;
+    color: var(--slate);
+    min-width: 3.4em;
+    text-align: center;
+  }
+  .progress-pill {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 650;
+    color: var(--navy);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 11px;
+  }
+
+  /* Layout */
+  .shell {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px 18px 64px;
+    display: grid;
+    grid-template-columns: 248px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* Sidebar TOC */
+  .sidebar {
+    position: sticky;
+    top: 66px;
+    max-height: calc(100vh - 82px);
+    overflow-y: auto;
+    padding-right: 6px;
+    font-size: 12.8px;
+  }
+  .sidebar-title {
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin: 14px 0 6px;
+    padding-left: 8px;
+  }
+  .sidebar-title:first-child { margin-top: 0; }
+  .sidebar a {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4.5px 8px;
+    border-radius: 6px;
+    color: var(--navy-mid);
+    text-decoration: none;
+    line-height: 1.38;
+  }
+  .sidebar a:hover { background: var(--bg-card); }
+  .sidebar a.active {
+    background: #e6eef9;
+    color: var(--navy-dark);
+    font-weight: 700;
+  }
+  .sidebar a.done-nav { color: var(--slate); }
+  .sidebar a.done-nav::after {
+    content: "✓";
+    margin-left: auto;
+    color: var(--green-text);
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .sidebar .num {
+    flex: 0 0 auto;
+    font-variant-numeric: tabular-nums;
+    color: var(--slate);
+    font-weight: 650;
+    font-size: 11.5px;
+  }
+
+  /* Main Header */
+  .hero {
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 16px;
+    margin-bottom: 18px;
+  }
+  .kicker {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slate);
+    letter-spacing: 0.04em;
+  }
+  .hero h1 {
+    margin: 4px 0 8px;
+    font-size: 26px;
+    line-height: 1.28;
+    color: var(--navy-dark);
+  }
+  .hero p.lead {
+    margin: 0;
+    color: #3a4654;
+    font-size: 14px;
+  }
+
+  /* Filter Pills */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 22px;
+  }
+  .filter-btn {
+    font: inherit;
+    font-size: 12.8px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--navy-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { background: var(--bg-card); }
+  .filter-btn.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+
+  /* Part Divider */
+  .part-banner {
+    margin: 34px 0 14px;
+    padding: 10px 14px;
+    border-left: 4px solid var(--navy);
+    background: var(--bg-card);
+    border-radius: 0 8px 8px 0;
+  }
+  .part-banner .part-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--navy);
+    text-transform: uppercase;
+  }
+  .part-banner h2 {
+    margin: 2px 0 0;
+    font-size: 17px;
+    color: var(--navy-dark);
+  }
+
+  /* Section & Cheat Sheet Cards */
+  .cheatsheet {
+    margin: 0 0 26px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .cheatsheet-head {
+    background: var(--navy);
+    color: #fff;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .cheatsheet-head h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .cheatsheet-head span {
+    font-size: 12px;
+    opacity: 0.88;
+  }
+  .cheatsheet-body {
+    padding: 14px 16px 16px;
+  }
+  .cheatsheet-body h3 {
+    margin: 14px 0 8px;
+    font-size: 14px;
+    color: var(--navy);
+  }
+  .cheatsheet-body h3:first-child { margin-top: 2px; }
+
+  /* Lecture Card */
+  .lec-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 0 0 18px;
+    background: #fff;
+    overflow: hidden;
+    scroll-margin-top: 72px;
+  }
+  .lec-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    user-select: none;
+  }
+  .lec-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--navy);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+  }
+  .lec-title-wrap { flex: 1 1 260px; min-width: 0; }
+  .lec-title {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.35;
+    color: var(--navy-dark);
+  }
+  .lec-meta {
+    font-size: 12px;
+    color: var(--slate);
+    margin-top: 1px;
+  }
+  .lec-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lec-orig {
+    font-size: 12px;
+    color: var(--navy);
+    text-decoration: none;
+    padding: 3px 8px;
+    border: 1px solid #c5d0de;
+    border-radius: 6px;
+    background: #fff;
+  }
+  .lec-orig:hover { background: #e8eff8; }
+  .done-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--slate);
+    cursor: pointer;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #d5deea;
+  }
+  .done-label input { accent-color: var(--green-text); cursor: pointer; }
+  .toggle-ico {
+    font-size: 12px;
+    color: var(--slate);
+    width: 18px;
+    text-align: center;
+    transition: transform 0.15s;
+  }
+  .lec-card.collapsed .lec-body { display: none; }
+  .lec-card.collapsed .toggle-ico { transform: rotate(-90deg); }
+  .lec-card.collapsed .lec-head { border-bottom: none; }
+
+  .lec-body { padding: 14px 18px 18px; }
+  .one-liner {
+    margin: 0 0 12px;
+    padding: 9px 12px;
+    background: #f8fafd;
+    border-left: 3px solid var(--navy);
+    color: var(--navy-mid);
+    font-size: 13.8px;
+    font-weight: 550;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .sub-h {
+    margin: 14px 0 6px;
+    font-size: 13.8px;
+    font-weight: 750;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lec-body ul {
+    margin: 0 0 10px;
+    padding-left: 1.25em;
+  }
+  .lec-body li { margin: 4px 0; }
+  .lec-body li ul { margin: 3px 0 4px; }
+
+  /* Tables */
+  .tbl-wrap { overflow-x: auto; margin: 8px 0 12px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 7px 9px;
+    vertical-align: top;
+    text-align: left;
+  }
+  th {
+    background: var(--bg-table-head);
+    color: var(--navy-dark);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  td strong { color: var(--navy-dark); }
+
+  /* Callout Boxes (Exam / Tip / Warning) */
+  .callout {
+    margin: 12px 0 2px;
+    padding: 10px 13px;
+    border-radius: 8px;
+    font-size: 13.4px;
+    border: 1px solid var(--gold-border);
+    background: var(--gold-bg);
+  }
+  .callout-title {
+    font-weight: 750;
+    color: #7c5200;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  .callout ul { margin: 4px 0 0; padding-left: 1.2em; }
+  .callout li { margin: 3px 0; }
+  .callout.danger {
+    background: var(--red-bg);
+    border-color: var(--red-border);
+  }
+  .callout.danger .callout-title { color: var(--red-text); }
+  .callout.exam {
+    background: #f2f4ff;
+    border-color: #7c8ee6;
+  }
+  .callout.exam .callout-title { color: #24389c; }
+
+  /* Inline Key Terms & Study (Cloze/Blur) Mode */
+  .k {
+    font-weight: 700;
+    color: var(--navy-dark);
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+  body.quiz-mode .k {
+    background: #1d3f73;
+    color: transparent;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  body.quiz-mode .k:hover { opacity: 0.88; }
+  body.quiz-mode .k.revealed {
+    background: #ffe39a;
+    color: #1c1c1c;
+  }
+  .quiz-hint {
+    display: none;
+    margin: 0 0 14px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #fff6db;
+    border: 1px solid var(--gold-border);
+    color: #5c3d00;
+    font-size: 13px;
+  }
+  body.quiz-mode .quiz-hint { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+  /* Highlights-only mode */
+  body.tips-only .normal-block { display: none; }
+  body.tips-only .cheatsheet { display: none; }
+  body.tips-only .one-liner { margin-bottom: 8px; }
+
+  /* Search Highlight */
+  mark.hit {
+    background: #ffe39a;
+    color: inherit;
+    padding: 0 1px;
+    border-radius: 2px;
+  }
+  mark.hit.current {
+    background: #ff9f43;
+    color: #111;
+    box-shadow: 0 0 0 2px rgba(255, 159, 67, 0.35);
+  }
+
+  .hidden { display: none !important; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+    background: #eef3f9;
+    padding: 1px 4px;
+    border-radius: 4px;
+    color: var(--navy-dark);
+  }
+  .badge-x {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #b42318;
+    background: #fee4e2;
+    padding: 0 5px;
+    border-radius: 4px;
+    margin-left: 2px;
+  }
+  .badge-o {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #1b5e34;
+    background: #dcfce7;
+    padding: 0 5px;
+    border-radius: 4px;
+    margin-left: 2px;
+  }
+
+  /* Responsive */
+  @media (max-width: 980px) {
+    .shell { grid-template-columns: 1fr; padding: 14px 14px 48px; }
+    .sidebar { display: none; }
+    .progress-pill { margin-left: 0; }
+  }
+
+  /* Print */
+  @media print {
+    .toolbar, .sidebar, .filters, .lec-actions, .toggle-ico, .quiz-hint { display: none !important; }
+    .shell { display: block; padding: 0; max-width: none; }
+    .lec-card { break-inside: avoid-page; border: 0.5pt solid #b8c4d4; margin-bottom: 10px; }
+    .lec-card.collapsed .lec-body { display: block !important; }
+    .lec-head { background: #f4f7fb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .cheatsheet-head { background: #1d3f73 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body.quiz-mode .k { background: transparent !important; color: inherit !important; }
+    mark.hit { background: transparent !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="toolbar">
+  <div class="toolbar-inner">
+    <a class="back-link" href="index.html" title="전체 슬라이드·녹취 정리로 이동">← 원본 강의 전체</a>
+    <form class="search-wrap" id="searchForm" role="search">
+      <input id="q" type="search" placeholder="약물·유전자·기준치 검색 (예: HLA, Hy's, 메트포르민)" aria-label="검색" autocomplete="off" spellcheck="false">
+      <button type="button" class="btn" id="qPrev" title="이전 결과">이전</button>
+      <button type="button" class="btn" id="qNext" title="다음 결과">다음</button>
+      <span class="count" id="qCount" aria-live="polite"></span>
+    </form>
+    <button type="button" class="btn" id="btnQuiz" aria-pressed="false" title="핵심 키워드와 수치를 가려서 셀프 테스트합니다">암기 모드</button>
+    <button type="button" class="btn" id="btnTipsOnly" aria-pressed="false" title="강사 강조·시험 출제·Q&A 포인트만 모아봅니다">★ 강조 포인트만</button>
+    <button type="button" class="btn" id="btnToggleAll">모두 접기</button>
+    <button type="button" class="btn" id="btnPrint">인쇄 / PDF</button>
+    <span class="progress-pill" id="progressPill">0 / 16 완료</span>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar" aria-label="목차">
+    <div class="sidebar-title">한눈에 보기</div>
+    <a href="#cheatsheet"><span class="num">★</span> 초고빈출 치트시트</a>
+
+    <div class="sidebar-title">Part I. 체계·평가·기전</div>
+    <a href="#s1" data-nav="s1"><span class="num">01</span> KIDS·약물감시·KAERS</a>
+    <a href="#s2" data-nav="s2"><span class="num">02</span> ADR 모니터링·사례</a>
+    <a href="#s3" data-nav="s3"><span class="num">03</span> 빅데이터·CDM</a>
+    <a href="#s4" data-nav="s4"><span class="num">04</span> 약물유전체·HLA</a>
+    <a href="#s5" data-nav="s5"><span class="num">05</span> 약물역학·인과성 평가</a>
+    <a href="#s6" data-nav="s6"><span class="num">06</span> 약물상호작용</a>
+
+    <div class="sidebar-title">Part II. 장기·기전별 ADR</div>
+    <a href="#s7" data-nav="s7"><span class="num">07</span> 과민반응·SCAR</a>
+    <a href="#s8" data-nav="s8"><span class="num">08</span> 약인성 신질환·전해질</a>
+    <a href="#s9" data-nav="s9"><span class="num">09</span> 약인성 간질환(DILI)</a>
+    <a href="#s10" data-nav="s10"><span class="num">10</span> 정신신경계 약물</a>
+
+    <div class="sidebar-title">Part III. 약물군별 가이드</div>
+    <a href="#s11" data-nav="s11"><span class="num">11</span> 조영제 가이드라인</a>
+    <a href="#s12" data-nav="s12"><span class="num">12</span> 항생제·R1 교차반응</a>
+    <a href="#s13" data-nav="s13"><span class="num">13</span> 심혈관계 약물</a>
+    <a href="#s14" data-nav="s14"><span class="num">14</span> 내분비계(당뇨·스타틴)</a>
+    <a href="#s15" data-nav="s15"><span class="num">15</span> 면역항암제(irAE·HPD)</a>
+
+    <div class="sidebar-title">Part IV. 특수집단</div>
+    <a href="#s16" data-nav="s16"><span class="num">16</span> 임산부·기형학·RMP</a>
+  </aside>
+
+  <main id="content">
+    <section class="hero">
+      <p class="kicker">제4차 약물부작용 심화교육 (전체 16강 · 1,080슬라이드 압축)</p>
+      <h1>핵심 요약 노트</h1>
+      <p class="lead">원본 사이트(<code>coinyak.github.io/adr-study</code>)의 슬라이드와 강의 설명·Q&A를 토대로 핵심 개념, 기준치, 대표 약물↔부작용, 강사 강조 및 시험 출제 포인트를 한 페이지로 정리했습니다. <strong>암기 모드</strong>를 켜면 핵심 키워드·수치가 가려져 클릭하며 복습할 수 있습니다.</p>
+    </section>
+
+    <div class="quiz-hint">
+      <span><strong>암기 모드 활성화 중</strong> — 파란색으로 가려진 핵심 키워드를 클릭하면 정답이 보입니다.</span>
+      <button type="button" class="btn" id="btnRevealAll">전체 정답 보기 / 다시 가리기</button>
+    </div>
+
+    <div class="filters" role="tablist" aria-label="영역 필터">
+      <button type="button" class="filter-btn active" data-filter="all">전체 보기</button>
+      <button type="button" class="filter-btn" data-filter="cheat">★ 치트시트</button>
+      <button type="button" class="filter-btn" data-filter="part1">Part I (1~6강)</button>
+      <button type="button" class="filter-btn" data-filter="part2">Part II (7~10강)</button>
+      <button type="button" class="filter-btn" data-filter="part3">Part III (11~15강)</button>
+      <button type="button" class="filter-btn" data-filter="part4">Part IV (16강)</button>
+    </div>
+
+    <!-- CHEAT SHEET -->
+    <section class="cheatsheet" id="cheatsheet" data-part="cheat">
+      <div class="cheatsheet-head">
+        <h2>★ 초고빈출 핵심 수치 · 기준치 · HLA · 해독제 치트시트</h2>
+        <span>1~16강 통합 빠른 복습표</span>
+      </div>
+      <div class="cheatsheet-body">
+        <h3>1) 제도 · 인과성 평가 · 약물역학 핵심 기준</h3>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>영역</th><th>항목</th><th>핵심 수치 및 기준</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>신속보고 기한</strong> (1강)</td>
+                <td>외국 판매중지·회수 / 식약처 지시 / 일반 중대정보·중대 ADR</td>
+                <td>인지 후 <span class="k">3일</span>(국내 조치계획 7일) / 지시일 <span class="k">7일</span> / 인지 후 <span class="k">15일</span></td>
+              </tr>
+              <tr>
+                <td><strong>인과성 평가</strong> (2·5강)</td>
+                <td>TREND 5요소 / 한국형 v2.0 / Naranjo</td>
+                <td><span class="k">Time · Rechallenge · Exclusion · Novelty · Dechallenge</span><br>한국형: <span class="k">≥12 Certain, 6~11 Probable, 2~5 Possible, ≤1 Unlikely</span> / Naranjo: ≥9 Definite, 5~8 Probable, 1~4 Possible, ≤0 Doubtful</td>
+              </tr>
+              <tr>
+                <td><strong>실마리·역학</strong> (1·5강)</td>
+                <td>시판 전 관찰 중앙값 / PRR·ROR / Rule of 3</td>
+                <td>EMA 200품목 중앙값 <span class="k">1,708명</span> / 실마리: <span class="k">PRR ≥2 또는 ROR ≥2, χ² ≥4, A ≥3건</span> / 발생률 1/N을 95% 검출하려면 <span class="k">3N명</span> 필요</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2) 유전체(HLA) · 장기독성 진단/중단 기준 · 해독제</h3>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>영역</th><th>항목</th><th>핵심 기준 / 처치</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>HLA-SCAR</strong> (4·7강)</td>
+                <td>Allopurinol / CBZ / Abacavir / Methazolamide</td>
+                <td><strong>Allopurinol</strong> <span class="k">HLA-B*58:01</span>(한국인 12%, 2021.8.1 급여) / <strong>CBZ</strong> <span class="k">B*15:02</span>(한족 10%+, 한국 &lt;1%)·한국인은 <span class="k">B*15:11 · A*31:01</span> / <strong>Abacavir</strong> <span class="k">B*57:01</span>(한국인 0%) / <strong>Methazolamide</strong> <span class="k">B*59:01</span></td>
+              </tr>
+              <tr>
+                <td><strong>SCAR 감별</strong> (4·7강)</td>
+                <td>SJS / TEN / DRESS / AGEP</td>
+                <td><strong>SJS 1~10%</strong> · Overlap 10~30% · <strong>TEN ≥30%</strong>(4~28일, 점막·통증·Nikolsky+, <span class="k">박리 후 전신 스테로이드 금기</span>) / <strong>DRESS</strong>(&gt;3주, ALT&gt;100·HHV-6·호산구, <span class="k">장기 스테로이드 서서히 감량</span>) / <strong>AGEP</strong>(수시간~2일, 무균성 농포·호중구↑)</td>
+              </tr>
+              <tr>
+                <td><strong>아나필락시스</strong> (7강)</td>
+                <td>1차 응급처치</td>
+                <td><span class="k">에피네프린 1:1000 허벅지 전방외측 IM</span> — 성인 최대 <span class="k">0.5 mg</span>, 소아 최대 <span class="k">0.3 mg</span> (5~15분 반복, 15~20 mm 바늘, IV·SC 금지)</td>
+              </tr>
+              <tr>
+                <td><strong>AKI (KDIGO)</strong> (8강)</td>
+                <td>진단 / 신전성 vs 신성</td>
+                <td>48h 내 <span class="k">Cr ≥0.3↑</span> / 7일 내 <span class="k">≥1.5배</span> / 6h+ <span class="k">UO &lt;0.5 mL/kg/h</span><br>신전성(<span class="k">FENa &lt;1%, FEurea &lt;35%, BUN:Cr &gt;20</span>) vs 신성(<span class="k">&gt;1%, &gt;35%, &lt;20, muddy brown cast</span>)</td>
+              </tr>
+              <tr>
+                <td><strong>DILI (간손상)</strong> (9강)</td>
+                <td>R ratio / Hy's Law / FDA 중단</td>
+                <td><code>R = (ALT/ULN) ÷ (ALP/ULN)</code>: <span class="k">R &gt;5 간세포형, R &lt;2 담즙정체형</span>, 2~5 혼합형<br><strong>Hy's Law</strong>: <span class="k">ALT/AST &gt;3×ULN + Bil &gt;2×ULN</span>(사망률 10~50%)<br>FDA 중단: 간세포형 <code>ALT ≥8×ULN</code> / <code>≥5×ULN</code>(2주) / <code>≥3×ULN + Bil≥2·INR≥1.5·증상</code>; 담즙형 황달·<code>Bil≥3×ULN</code>·<code>INR≥1.5</code></td>
+              </tr>
+              <tr>
+                <td><strong>조영제</strong> (11강)</td>
+                <td>신독성 고위험 / 메트포르민</td>
+                <td>고위험: <span class="k">동맥·ICU eGFR &lt;45 / 정맥 eGFR &lt;30</span><br><strong>메트포르민(2022 3판)</strong>: AKI 없고 <span class="k">eGFR ≥30 중단 불필요</span>; AKI·<span class="k">eGFR &lt;30</span>·동맥색전위험 시 <span class="k">전후 48시간 중단</span></td>
+              </tr>
+              <tr>
+                <td><strong>면역항암제</strong> (15강)</td>
+                <td>irAE 스테로이드(MPD) / HPD</td>
+                <td>G1 지속 / G2 연기·<span class="k">0.5~1 mg/kg/d</span> / G3 연기·<span class="k">1~2 mg/kg/d</span> / G4 <span class="k">영구중단</span>·1~2 mg/kg/d (중증 폐렴 G3~4: <span class="k">2~4 mg/kg/d, 6주 감량 + 박트림</span>). 초기 1~3개월 <span class="k">HPD(14~20%)</span> 감시</td>
+              </tr>
+              <tr>
+                <td><strong>해독제·특이치료</strong></td>
+                <td>약물별 대응</td>
+                <td>Warfarin → <span class="k">Vit K</span> | Dabigatran → <span class="k">Idarucizumab</span>(국내 유일 NOAC 해독제) | Heparin → <span class="k">Protamine</span> | AAP → <span class="k">NAC</span> | Valproate → <span class="k">L-carnitine</span> | MTX → <span class="k">Leucovorin·Glucarpidase</span>(요알칼리화) | NMS → <span class="k">Dantrolene·Bromocriptine</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART I -->
+    <div class="part-banner" data-part="part1">
+      <div class="part-label">Part I · Lectures 01 – 06</div>
+      <h2>약물감시 체계 · 인과성 평가 · 빅데이터 · 약물유전체 · 약물역학 · 약물상호작용</h2>
+    </div>
+
+    <!-- Lecture 01 -->
+    <article class="lec-card" id="s1" data-part="part1">
+      <div class="lec-head">
+        <span class="lec-badge">01강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">한국의약품안전관리원과 약물이상반응 (국/내외 보고 시스템 포함)</h3>
+          <div class="lec-meta">한국의약품안전관리원 신선미 · 48슬라이드</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec1" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s1">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">시판 전 임상시험의 구조적 한계(관찰 환자 중앙값 1,708명)를 보완하는 시판 후 약물감시 체계(KIDS·KAERS-NeDrug·MedDRA·ICH E2B(R3))와 법령·보고 실무.</p>
+        <div class="normal-block">
+          <div class="sub-h">핵심 개념 · 제도 · 법령</div>
+          <ul>
+            <li><strong>시판 전 임상시험 6대 한계(Strom)</strong>: <span class="k">Too few · Too simple · Too median-age · Too narrow · Too brief · Too indirect</span>. EMA 허가 200품목 관찰 환자 중앙값 <span class="k">1,708명</span>(Orphan 438명).</li>
+            <li><strong>역사적 계기</strong>: 설파닐아미드(1937, 신부전 107명 사망) → 클로람페니콜(1950, 재생불량성 빈혈) → <span class="k">탈리도마이드(1957, 임신 3~8주 사지결손증 1만 명+)</span> → 세리바스타틴(2001, 횡문근융해증·gemfibrozil 병용금기) → PPA(2004, 출혈성 뇌졸중)·로페콕시브(2004, 심혈관 사망).</li>
+            <li><strong>한국의약품안전관리원(KIDS, 2012.1 설립, 식약처 산하)</strong>: 안전정보 수집·평가(지역의약품안전센터 <span class="k">28개</span>, 누적 212만+건), 약물역학조사·피해구제, <span class="k">DUR 정보 개발</span>(KIDS 제안 → 식약처 고시 → 심평원 탑재), 마약류 통합관리, 첨단바이오 장기추적.</li>
+            <li><strong>용어 구분</strong>: <strong>부작용(SE)</strong>(정상용량, <em>바람직한 효과 포함</em>) &gt; <strong>이상사례(AE)</strong>(바람직하지 않은 모든 징후·증상, 과량·오남용 포함, 인과 무관) &gt; <strong>약물이상반응(ADR)</strong>(정상용량·<span class="k">인과관계 배제 불가</span>).</li>
+            <li><strong>중대한 이상사례(규칙 제84조 5항목)</strong>: ① 사망·생명위협 ② 입원·입원연장 ③ 지속적·중대한 불구/기능저하 ④ 선천성 기형·이상 ⑤ 약물의존·남용·혈액질환 등 기타 의학적 중요 상황.</li>
+            <li><strong>표준용어 &amp; 시스템 전환</strong>: WHO-ART(2015년 유지 중단) → <span class="k">MedDRA</span>(8자리 숫자 코드, SOC→HLGT→HLT→PT→<strong>LLT</strong> 5계층). 2021.6 <span class="k">ICH E2B(R3) 기반 KAERS-NeDrug</span>(국내 231항목) 도입.</li>
+            <li><strong>실마리정보(Signal)</strong>: 전문가 검토(<strong>DMEs</strong>: TEN·SJS·간부전 등 드물고 심각 / <strong>TMEs</strong>: 소아·노인·임산부 등) + <span class="k">데이터마이닝 불균형 분석(DMAs, WHO IC 값 등)</span> 병행.</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 실무 포인트</div>
+          <ul>
+            <li>기관 전체 보고 내역을 관리하려면 개인 계정이 아닌 <span class="k">사업자등록번호 대표 계정</span>으로 보고해야 함.</li>
+            <li>추적보고는 최초 보고와 <span class="k">고유식별 보고자관리번호를 동일 유지</span>해야 한 사례로 연결됨. 중대 여부는 보고서 전체가 아니라 <span class="k">이상사례별</span> 체크.</li>
+            <li>최소 보고 4요건: 식별 가능한 환자 · 의심 의약품(제품명 권장) · 이상사례 · 보고자. 추가설명 한글 최대 약 3만 자, 첨부파일 개인정보 마스킹 필수. 데이터마이닝은 보조 수단일 뿐 중심은 전문가 개별 평가.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 02 -->
+    <article class="lec-card" id="s2" data-part="part1">
+      <div class="lec-head">
+        <span class="lec-badge">02강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">약물이상반응 모니터링 및 사례 소개 (인과관계 평가)</h3>
+          <div class="lec-meta">73슬라이드 · 4개 임상 증례 실습</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec2" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s2">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">ADR 모니터링 4단계(보고→평가→활용→추적)와 WHO-UMC · 한국형 알고리즘 v2.0 · Naranjo · CTCAE v5.0을 4개 실제 임상 증례에 적용.</p>
+        <div class="normal-block">
+          <div class="sub-h">모니터링 체계 &amp; 인과성 평가 도구</div>
+          <ul>
+            <li><strong>능동적 보고 대상</strong>: 집중모니터링 24성분, DUR 금기 3종(병용·특정연령·임부)·주의 6종, 안전성 서한(JAKi 3종[토파시티닙·바리시티닙·유파다시티닙] 심질환·혈전 박스경고; 타미플루 등 소아·청소년 경련/섬망), 백신 설문.</li>
+            <li><strong>WHO-UMC(6단계)</strong>: Certain / Probable / Possible / Unlikely / Conditional / Unassessable (직관적이나 주관적).</li>
+            <li><strong>한국형 알고리즘 v2.0 (8항목, -13~+19점)</strong>: 시간(+3/-3), 감량·중단(+3/-2), 과거력(+1/-1), 병용약(+2/-3), 비약물(+1/-1), 알려진 정보(+3/+2), 재투약(+3/-2), 특이검사(+3/-1) → <span class="k">≥12 Certain, 6~11 Probable, 2~5 Possible, ≤1 Unlikely</span>.</li>
+            <li><strong>Naranjo (10문항)</strong>: ≥9 Definite, 5~8 Probable, 1~4 Possible, ≤0 Doubtful (위약 투여·독성농도 등 임상 적용 한계).</li>
+          </ul>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>사례</th><th>의심약물 → 이상증상</th><th>인과성 평가</th><th>중증도 / 심각도</th></tr></thead>
+              <tbody>
+                <tr><td><strong>사례 1</strong></td><td><strong>Daratumumab</strong> → 발열·오한·저혈압·SpO2↓ (첫 주입 후, 이후 3회 무증상)</td><td>4증상을 <span class="k">주입관련반응(IRR)</span>으로 통합 → <strong>Probable</strong> (한국형 10점)</td><td>CTCAE G2 / Non-serious</td></tr>
+                <tr><td><strong>사례 2</strong></td><td><strong>Pyrazinamide</strong> → HREZ 9일 후 AST/ALT 319/173 (PZA 제외 재개 시 정상)</td><td>한국형 12점이나 <span class="k">PZA 미재투여</span> 반영 → 최종 <strong>Probable</strong></td><td>CTCAE G3 / <strong>Serious</strong></td></tr>
+                <tr><td><strong>사례 3</strong></td><td><strong>Fosaprepitant</strong> → 두드러기·가려움 (반복 노출 재발, 제외 시 무증상)</td><td><strong>Certain</strong> (한국형 16점, 재투여 +3)</td><td>경미 / Non-serious</td></tr>
+                <tr><td><strong>사례 4</strong></td><td><strong>Pethidine</strong> → 분만 후 어지러움 (병용 Fentanyl·산후 출혈 Hb 6.3 동반)</td><td><strong>Possible</strong> (한국형 5점; 병용 -3, 출혈 -1)</td><td>경미 / Non-serious</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 포인트</div>
+          <ul>
+            <li>수집 정보를 반드시 <span class="k">시간순 타임라인</span>으로 재구성해야 병용약·기저상태와의 선후관계가 보임.</li>
+            <li>사례 2처럼 알고리즘 합계가 Certain 구간(12점)이어도 재투여 정보가 없으면 기계적 적용을 피하고 <span class="k">WHO-UMC 임상 판단(Probable)</span>을 우선함.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 03 -->
+    <article class="lec-card" id="s3" data-part="part1">
+      <div class="lec-head">
+        <span class="lec-badge">03강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">빅데이터 (능동적 약물감시와 공통데이터모델 CDM)</h3>
+          <div class="lec-meta">충북대병원 알레르기내과 강민규 · 100슬라이드</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec3" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s3">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">자발보고(수동적 감시)의 한계를 넘어 건강보험 청구자료 · RWD/RWE · 분산형 공통데이터모델(CDM)로 능동적 약물감시를 구현하는 국내·외 체계.</p>
+        <div class="normal-block">
+          <div class="sub-h">RWD · 청구자료 · CDM 핵심 비교</div>
+          <ul>
+            <li><strong>Efficacy(RCT, 효능)</strong> vs <strong>Effectiveness(RWD, 효과 = <span class="k">Efficacy + Adherence</span>)</strong>. RWD는 EMR·청구자료·SNS(트위터 기반 WEB-RADR)·라이프로그까지 확장.</li>
+            <li><strong>건강보험 청구자료</strong>: 전국민 단일보험 표준화 강점 vs <span class="k">비급여 제외 · Lab 결과값/의무기록 부재 · 사망 미연계</span> 한계. <strong>건보공단(NHIS)</strong>이 건강검진 결과와 <span class="k">표본코호트 2.0(전 국민 2%, 100만 명)</span> 보유 <em>(슬라이드 30 '심평원'은 건보공단 오기)</em>.</li>
+            <li><strong>공통데이터모델(CDM) 원리</strong>: 병원별 1회 ETL 변환 → <span class="k">원자료 유출 없이 공통 쿼리만 배포·로컬 실행·요약 결과만 회수</span> → IPD 메타분석 + 성향점수 매칭(PSM). 장점: 개인정보 안전·비급여/Lab 활용 / 치명적 단점: <span class="k">병원 간 데이터 단절</span>.</li>
+          </ul>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>구분</th><th>미국 Sentinel Initiative</th><th>OHDSI Network</th></tr></thead>
+              <tbody>
+                <tr><td><strong>주체·성격</strong></td><td>규제당국 공적 체계 (<span class="k">2007 FDAAA</span>, 3.6억 명)</td><td>글로벌 오픈 학술 네트워크 (82+ DB, 12억 기록)</td></tr>
+                <tr><td><strong>모델·표준어휘</strong></td><td>Sentinel CDM v7.0 (Mother-Infant 연계 포함)</td><td><strong>OMOP CDM v6.0</strong> (<span class="k">SNOMED-CT</span> 진단 · <span class="k">RxNorm</span> 약물)</td></tr>
+                <tr><td><strong>도구·성과</strong></td><td>SAS 기반(RAF/RADaR/ARIA, Stockpiling). 성과: <strong>RotaTeq 장중첩증 라벨 변경</strong>, Pradaxa 출혈</td><td>무료 웹 플랫폼 <span class="k">ATLAS</span>(SQL·R 자동 생성). 다국적 비교·COVID-19 신속 근거</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul>
+            <li><strong>국내 체계</strong>: <strong>K-CDM</strong>(2015~2018) → <span class="k">MOA-NET</span>(식약처-KIDS-20+ 병원, OMOP+Sentinel 병행; 알로푸리놀-TSH 상승 등 분산분석) &amp; <span class="k">OHDSI-Korea / FEEDER-NET</span>(아주대 주도 ~60기관, 학술 중심).</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 포인트</div>
+          <ul>
+            <li>국내 청구 코드(KCD·EDI)는 <span class="k">계층(위계) 정보가 없어</span> SNOMED-CT·RxNorm 국제표준 매핑과 지속적 검수가 CDM 성패의 핵심.</li>
+            <li>원내 수동감시 사례: Ultravist 심정지(코우니스 증후군) → EMR 절대금기·전처치 명시; Cefaclor 아나필락시스 → 음성 확인된 ceftriaxone·ampicillin은 첫 투여 시 <strong>graded challenge</strong> 안내.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 04 -->
+    <article class="lec-card" id="s4" data-part="part1">
+      <div class="lec-head">
+        <span class="lec-badge">04강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">약물유전체와 약물이상반응</h3>
+          <div class="lec-meta">89슬라이드 · SCAR &amp; DILI 유전 기전</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec4" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s4">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">예측 불가능한 Type B 중증 ADR(Abacavir 과민반응, SCAR, DILI)의 면역·대사 유전 기전과 인종별 대립유전자 빈도에 따른 임상 스크리닝 적용 기준.</p>
+        <div class="normal-block">
+          <div class="sub-h">기전 &amp; 대표 약물–유전자 매핑</div>
+          <ul>
+            <li>미국 시장 퇴출(1976~2005, 28약물): <span class="k">간독성(21%) · Torsades de pointes(21%)</span> 최다.</li>
+            <li><strong>T세포 활성화 3개념</strong>: Hapten(페니실린) · Prohapten(sulfamethoxazole) · <span class="k">p-i concept / Altered peptide</span>(중증 SCAR 주류). <strong>HLA Class I(A·B·C → CD8+)</strong> vs <strong>Class II(DR·DQ·DP → CD4+)</strong>.</li>
+          </ul>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>약물</th><th>ADR</th><th>핵심 유전자</th><th>근거 · 인종 차이 및 국내 적용</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Abacavir</strong></td><td>제4형 과민(5~8%, 첩포 확진)</td><td><span class="k">HLA-B*57:01</span></td><td>PREDICT-1/SHAPE <strong>NPV 100%</strong>. 백인 4~8%(사전검사 필수) vs <span class="k">한국인 0%</span> → 한국인 일상 검사 미권고</td></tr>
+                <tr><td><strong>Carbamazepine</strong></td><td>SJS/TEN · SCAR</td><td><span class="k">B*15:02</span> / <span class="k">B*15:11 · A*31:01</span></td><td>대만 한족 B*15:02 OR 2,504(스크리닝 후 0건) vs <span class="k">한국 &lt;1%</span>. 한국인은 <strong>B*15:11</strong>(OR 18.4)·<strong>A*31:01</strong>(OR 10.3) 유의</td></tr>
+                <tr><td><strong>Allopurinol</strong></td><td>SCAR (SJS/TEN·DRESS)</td><td><span class="k">HLA-B*58:01</span></td><td><span class="k">한국인 보유율 12%</span>, OR 97.8(92% vs 10.5%). 국내 허가사항 반영·급여 검사 대상</td></tr>
+                <tr><td><strong>항결핵제(HRZE)</strong></td><td>간세포형 DILI (국내 최다)</td><td><span class="k">NAT2</span> (Slow acetylator)</td><td>메타분석 <span class="k">~3배 위험</span>, 일본 RCT 유전형 맞춤 용량 시 DILI·치료실패 감소. CYP2E1·GSTM1/T1은 한국인 비유의</td></tr>
+                <tr><td><strong>기타 DILI-HLA</strong></td><td>DILI</td><td>Amox/Clav <strong>DRB1*15:01-DQB1*06:02</strong>, Flucloxacillin <strong>B*57:01</strong>(OR 80.6)</td><td>단일 유전자 예측력 한계 → 아직 사전 HLA 스크리닝 미권고</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 포인트</div>
+          <ul>
+            <li>FDA 권고 유전자라도(Abacavir B*57:01, CBZ B*15:02) <span class="k">한국인 대립유전자 빈도</span>가 0~1% 미만이면 국내 일상 스크리닝은 유용하지 않음(외국인 진료 시 해당 인종 기준 적용).</li>
+            <li>SCAR는 단일 HLA 효과가 압도적이나, DILI는 <span class="k">약물 특성 + 숙주 요인 + 다중 유전형/오믹스</span> 통합 예측 모델이 필요.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 05 -->
+    <article class="lec-card" id="s5" data-part="part1">
+      <div class="lec-head">
+        <span class="lec-badge">05강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">약물부작용 인과성 평가에서 약물역학 근거의 활용</h3>
+          <div class="lec-meta">72슬라이드 · Bradford-Hill &amp; 국내 역학연구 4선</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec5" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s5">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">개별 증례(WHO 기준)와 실마리탐색(PRR/ROR)을 넘어 코호트·환자대조군·SCCS 등 집단 역학근거를 Bradford-Hill 기준으로 비평·판정하는 법.</p>
+        <div class="normal-block">
+          <div class="sub-h">설계 위계 · 지표 · 국내 대표 4개 연구</div>
+          <ul>
+            <li><strong>탐지 빈도</strong>: 임상시험 ~1/100 | 관찰역학 ~1/10,000 | SRS 1/10만~100만. <strong>Rule of 3</strong>: 발생률 1/N ADR을 95% 확률로 보려면 <span class="k">3N명</span> 관찰 필요.</li>
+            <li><strong>연구설계 위계</strong>: 사례보고 → 단면(POR) → 환자-대조군(OR, 희귀질환·PRN 약물 유리) → 코호트(RR, <strong>Dynamic cohort는 인년[person-time] 반영 필수</strong>) → RCT(부작용 검증 윤리적 불가).</li>
+            <li><strong>실마리 판정</strong>: <span class="k">PRR ≥2 또는 ROR ≥2, χ² ≥4, A ≥3건</span> (실마리는 확정 근거가 아니므로 역학 검증 필수).</li>
+            <li><strong>Bradford-Hill 9기준</strong>: 강도(약물 <span class="k">&gt;2배</span> 시 심증 강함)·시간성·일관성·생물학적 개연성·정합성·특이성(음성 대조 불변)·용량반응(약물은 초기 탈락으로 역용량반응 흔함)·실험·유추.</li>
+          </ul>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>약물 ↔ ADR</th><th>설계 · 자료원</th><th>핵심 결과</th><th>Bradford-Hill 판정</th></tr></thead>
+              <tbody>
+                <tr><td><strong>코로나19 백신</strong> ↔ 뇌염/뇌증</td><td><span class="k">SCCS</span> (1.3억 접종, 1~28일)</td><td>뇌염/뇌증 <strong>IRR 1.26</strong> (뇌수막염 1.03 비유의)</td><td>해외 일관성 + 기전 → <span class="k">FA(인과 수용 선호)</span></td></tr>
+                <tr><td><strong>졸피뎀</strong> ↔ 자살</td><td>환자-대조군 (NHIS-NSC)</td><td><strong>aOR 2.09</strong>; 누적 DDD별 <span class="k">1.98→2.31→2.82</span></td><td>강도(&gt;2) + 용량반응 + 일관성 → <strong>2019 FDA Boxed Warning</strong></td></tr>
+                <tr><td><strong>항우울제+NSAIDs</strong> ↔ 뇌출혈</td><td>PS 매칭 코호트 (HIRA 207만×2)</td><td><strong>aHR 1.6</strong>; 동일 조건 <span class="k">심근경색 HR 0.9</span></td><td>기전(혈소판 이중억제) + <strong>특이성(음성대조)</strong> 지지</td></tr>
+                <tr><td><strong>타미플루</strong> ↔ 신경정신계(NPAE)</td><td>환자교차설계 (5,322명)</td><td>2일 aOR 1.90이나 후속 코호트 <strong>위험 없음</strong></td><td><span class="k">독감 자체 증상 분리 불가</span>·계절 불일치 → 역학 인과 낮음</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 포인트</div>
+          <ul>
+            <li>전 국민 백신 연구에 <span class="k">SCCS(자기-대조 환자군)</span>를 쓰는 이유: 비접종자는 기저질환 등으로 편향되어 비교군 부적합 → 동일인 내 위험구간/대조구간 비교가 FDA·CDC 표준.</li>
+            <li>국내 청구자료에서 위장관 궤양은 위장약 처방용 상병코드가 남발돼 결과변수로 부적합 → 항우울제+NSAID 연구는 뇌출혈로 분석.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 06 -->
+    <article class="lec-card" id="s6" data-part="part1">
+      <div class="lec-head">
+        <span class="lec-badge">06강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">약물상호작용</h3>
+          <div class="lec-meta">30슬라이드 · PK(ADME) · PD · 음식·흡연·질병</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec6" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s6">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">약물관련문제(DRP)의 핵심인 약물상호작용을 약동학(ADME)·약력학·음식/흡연/질병으로 분류하고 4원칙(금기·회피·대체·모니터링)으로 관리.</p>
+        <div class="normal-block">
+          <div class="sub-h">약동학(PK) · 약력학(PD) · 생활/질병 핵심</div>
+          <ul>
+            <li><strong>흡수</strong>: 제산제(Al/Ca/Mg)·sucralfate + tetracycline/ciprofloxacin → <span class="k">2시간 전 또는 6시간 후</span>. PPI 위 pH↑ → ketoconazole·itraconazole 흡수↓.</li>
+            <li><strong>분포</strong>: 고단백결합(warfarin, phenytoin, sulfonamide, SU) 치환 → 유리형↑.</li>
+            <li><strong>대사(CYP450 최핵심)</strong>:
+              <ul>
+                <li><strong>유도제(효과↓)</strong>: <span class="k">Phenytoin · phenobarbital · carbamazepine · rifampin · St. John's wort</span> (경구피임제 실패, 메타돈 금단, 스테로이드 효과↓).</li>
+                <li><strong>억제제(독성↑)</strong>: <span class="k">Cimetidine</span>(타 H2B 대체), <span class="k">erythromycin</span>, fluconazole, valproate, <span class="k">자몽주스</span>, ketoconazole, <span class="k">ritonavir</span>(강력 3A4 억제), <span class="k">fluoxetine/fluvoxamine</span>.</li>
+                <li><strong>전구약물 차단</strong>: <span class="k">Omeprazole + Clopidogrel</span>(CYP2C19 활성전환 차단 → MI 재발).</li>
+                <li><strong>상호작용 최소 대체약</strong>: 항전간제(<span class="k">Gabapentin · Levetiracetam</span>), 항우울제(<span class="k">Mirtazapine · Escitalopram · Venlafaxine</span>).</li>
+              </ul>
+            </li>
+            <li><strong>배설</strong>: Probenecid + penicillin(분비 경쟁). <span class="k">아스피린 과량 시 중탄산나트륨 요알칼리화</span>(약산성 배설↑).</li>
+            <li><strong>중대 PD 금기/독성</strong>: <span class="k">질산염 + PDE5i</span>(중증 저혈압 금기), <span class="k">AG + 신경근차단제</span>(병용금기)/Vancomycin(신독성↑), Statin+Fibrate(횡문근융해), Tramadol+세로토닌약/경련역치↓약, BZD+오피오이드/알코올.</li>
+            <li><strong>장기 결핍 보충</strong>: PPI 장기(+Metformin) → <span class="k">Vit B12</span> | INH → <span class="k">Vit B6</span> | 장기 스테로이드 → <span class="k">Ca·Vit D</span>.</li>
+            <li><strong>음식·흡연·질환</strong>: Levothyroxine·Bisphosphonate <strong>공복</strong>. Warfarin은 Vit K 채소 금지 말고 <strong>일정 섭취</strong>. 심부전 악화약(Non-DHP CCB, Class IC, NSAIDs, TZD, 스테로이드, dronedarone). 파킨슨 유발(D2 차단: metoclopramide, 항정신병약, cinnarizine/flunarizine).</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 실무 포인트</div>
+          <ul>
+            <li><strong>오피오이드 변비</strong>: 장기 고용량 투여 시 대부분 부작용은 내성이 생기지만 <span class="k">변비만은 내성이 없으므로 변비약 병용 필수</span>(미처방 = 약물요법 부재 DRP).</li>
+            <li><strong>흡연 &amp; Theophylline</strong>: 흡연자는 청소율↑ → COPD 환자가 <span class="k">입원(금연)하면 농도↑·독성 / 퇴원(재흡연)하면 농도↓</span> 되므로 입·퇴원 시 용량 재평가 필수.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- PART II -->
+    <div class="part-banner" data-part="part2">
+      <div class="part-label">Part II · Lectures 07 – 10</div>
+      <h2>장기 · 기전별 핵심 약물이상반응 (과민반응/SCAR · 신장 · 간 · 정신신경계)</h2>
+    </div>
+
+    <!-- Lecture 07 -->
+    <article class="lec-card" id="s7" data-part="part2">
+      <div class="lec-head">
+        <span class="lec-badge">07강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">약물과민반응의 진단과 치료 (중증피부이상반응 포함)</h3>
+          <div class="lec-meta">131슬라이드 · SCAR · 아나필락시스 · Delabeling</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec7" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s7">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">예측 불가한 Type B 과민반응의 즉시형 vs 지연형 감별, 치명적 SCAR·아나필락시스의 즉각 처치, 그리고 과잉 알레르기 라벨링의 폐해와 Delabeling.</p>
+        <div class="normal-block">
+          <div class="sub-h">SCAR 3대 질환 감별 &amp; 아나필락시스 처치</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>질환</th><th>발현시점</th><th>핵심 기준 · 특징</th><th>사망률 · 합병증</th><th>치료 · 대표 원인약</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>SJS / TEN</strong><br>(Type IVc)</td>
+                  <td><span class="k">4~28일</span></td>
+                  <td>표피박리 <span class="k">SJS 1~10% / TEN ≥30%</span>. 통증(가려움 X)·점막침범·수포·<strong>Nikolsky(+)</strong></td>
+                  <td>SJS 1~5%<br>TEN <span class="k">25~35%</span> (사인 패혈증, 실명)</td>
+                  <td>즉시 중단 + 화상치료. <span class="k">박리 후 전신 스테로이드 금기</span>, IVIG 고려.<br>방향족 AED, allopurinol, sulfa, oxicam</td>
+                </tr>
+                <tr>
+                  <td><strong>DRESS / DIHS</strong><br>(Type IVb)</td>
+                  <td><span class="k">2~8주 (&gt;3주)</span></td>
+                  <td>일본기준 6중 5: &gt;3주 발진·림프절·발열&gt;38℃·호산구/비정형림프구·<span class="k">ALT&gt;100</span>·<span class="k">HHV-6</span></td>
+                  <td><span class="k">~10%</span> (간부전)<br>장기 자가면역질환</td>
+                  <td>즉시 중단 + <span class="k">장기 전신 스테로이드 서서히 감량</span>.<br>allopurinol, CBZ, phenytoin, lamotrigine, dapsone</td>
+                </tr>
+                <tr>
+                  <td><strong>AGEP</strong><br>(Type IVd)</td>
+                  <td><span class="k">수시간~2일</span></td>
+                  <td>홍반 위 다발성 작은 <strong>무균성 농포</strong> + 고열 + <strong>호중구↑</strong> (패혈증 오인 잦음)</td>
+                  <td>낮음 (대개 호전)</td>
+                  <td>즉시 중단 + 전신 스테로이드.<br>aminopenicillin, cephalosporin, diltiazem, terbinafine</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ul>
+            <li><strong>아나필락시스 (WAO 기준)</strong>: 피부/점막 + 호흡기 or 저혈압 / 노출 후 4계통 중 ≥2 / 알려진 알레르겐 노출 후 저혈압(SBP &lt;90 또는 &gt;30%↓). 최우선 치료: <span class="k">에피네프린 1:1000 허벅지 전방외측 IM</span>(성인 ≤0.5 mg, 소아 ≤0.3 mg, 5~15분 반복; <span class="k">15~20 mm 바늘 교체</span>, IV·SC 금지) + O2·생리식염수·다리 거상.</li>
+            <li><strong>NSAIDs 특이체질(COX-1 억제)</strong>: 피부/혈청검사 무의미 → 경구 유발시험. 대안: AAP → <span class="k">선택적 COX-2 억제제</span>(안전 확인), 필수 시 아스피린 탈감작(중단 시 소실).</li>
+            <li><strong>H2B(Ranitidine 등)</strong>: IgE Type I → PPI 대체. <strong>Eperisone</strong>: 반복 노출 시 중증 아나필락시스 유사 반응 → 확실한 회피.</li>
+          </ul>
+        </div>
+        <div class="callout danger">
+          <div class="callout-title">★ 강사 강조: SCAR Danger Signs · 루틴 AST 금지 · Delabeling</div>
+          <ul>
+            <li><strong>SCAR Danger signs</strong>: 발진이 <span class="k">가려움→통증</span>으로 변하거나 표적홍반·고열·점막침범·수포·표피탈락 시 즉시 중단 및 의뢰(안약·한약 포함).</li>
+            <li><strong>루틴 항생제 피부시험(AST) 함정</strong>: 과거력 없는 일반인 AST는 의학적 해석 불가(잘못된 라벨 양산).</li>
+            <li><strong>Delabeling (NEJM 2019)</strong>: 페니실린 알레르기 라벨 보유자 최대 20% 중 진성 즉시형은 <span class="k">0.11%</span>. 불필요한 β-lactam 회피 시 수술부위감염(aOR 1.51)·MSSA 균혈증 사망률↑(확진 β-lactam이 반코마이신 대비 사망률 35%↓)·MRSA/VRE/<em>C. diff</em>↑ → <span class="k">저위험군(&gt;12개월 전 양성 발진·GI 증상 등)은 직접 경구 아목시실린 유발시험으로 Delabeling</span>.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 08 -->
+    <article class="lec-card" id="s8" data-part="part2">
+      <div class="lec-head">
+        <span class="lec-badge">08강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">약인성 신질환 및 전해질 이상</h3>
+          <div class="lec-meta">45슬라이드 · KDIGO AKI · RTA · 대표 신독성 약제</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec8" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s8">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">고령(&gt;65세)·탈수·신독성 병합 등 위험인자를 바탕으로 AKI·RTA·TMA·결정폐쇄를 감별하고 약물별 예방·모니터링 전략을 적용.</p>
+        <div class="normal-block">
+          <div class="sub-h">KDIGO AKI · RTA 3형 · 대표 신독성 약물</div>
+          <ul>
+            <li><strong>KDIGO AKI</strong>: 48h 내 <span class="k">Cr ≥0.3↑</span> / 7일 내 <span class="k">≥1.5배</span> / 6h+ <span class="k">UO &lt;0.5 mL/kg/h</span>. <strong>신전성</strong>(NSAIDs 수입소동맥 수축, ACEi/ARB 수출소동맥 이완 → <span class="k">FENa &lt;1%, FEurea &lt;35%, BUN:Cr &gt;20</span>) vs <strong>신성 ATN</strong>(<span class="k">&gt;1%, &gt;35%, &lt;20, muddy brown cast</span>).</li>
+            <li><strong>신세뇨관 산증(RTA)</strong>:
+              <ul>
+                <li><strong>Type 1(원위)</strong>: H⁺ 배출장애 + <span class="k">저K</span> → <strong>Amphotericin B</strong>(저K 52%).</li>
+                <li><strong>Type 2(근위)/Fanconi</strong>: HCO₃⁻·당·인·요산 소실(저K·저P·저요산·골연화증) → <span class="k">Ifosfamide</span>, Cisplatin, Tenofovir, Valproate, AG.</li>
+                <li><strong>Type 4(집합관)</strong>: <span class="k">저알도스테론 + 고K + 대사성 산증</span> → ACEi/ARB, CNI, NSAIDs, Heparin, Spironolactone, Trimethoprim.</li>
+              </ul>
+            </li>
+            <li><strong>NSAIDs</strong>: 신전성 AKI·AIN·신증후군·고K·만성 진통제 신병증(요로상피암 위험)까지 다중 기전 → 최소 용량·최단 기간, CT 조영제 전 중단 검토.</li>
+            <li><strong>Aminoglycoside</strong>(독성: <span class="k">genta &gt; tobra &gt; amikacin &gt; netilmicin</span>): 비핍뇨성 ATN → 기간 제한, <span class="k">1일 1회 투여, Trough 모니터링</span>.</li>
+            <li><strong>Vancomycin</strong>: &gt;4 g/d · &gt;7일 · <span class="k">Trough &gt;15 µg/mL</span> · 병용 신독성 위험 → TDM 필수.</li>
+            <li><strong>Amphotericin B</strong>: ATN·Type 1 RTA → 체액 유지, <span class="k">리포좀 제제(암비솜)</span> 전환.</li>
+            <li><strong>Cisplatin / Ifosfamide</strong>: Cisplatin(AKI·TMA·Salt-wasting) → IV 등장성 수액 / Ifosfamide(Fanconi) → <span class="k">Mesna</span>.</li>
+            <li><strong>Methotrexate</strong>(세뇨관 결정 폐쇄; 독성 24h &gt;15 / 48h &gt;1.5 / 72h &gt;0.5 µmol/L): 수액 · <span class="k">요알칼리화</span> · <span class="k">Leucovorin · Glucarpidase</span> (혈액투석은 Vd 커서 효과 적음).</li>
+            <li><strong>기타</strong>: AIN(NSAIDs, <strong>PPI</strong>, β-lactam, ciprofloxacin, rifampicin), 결정 폐쇄(Acyclovir, MTX, sulfonamide, oral NaP), <span class="k">MRI 가돌리늄 eGFR ≤30 금기</span>.</li>
+          </ul>
+        </div>
+        <div class="callout danger">
+          <div class="callout-title">★ 강사 강조 포인트: 표적항암제 TMA 조기 포착 &amp; 병합 회피</div>
+          <ul>
+            <li><strong>VEGF 억제제(Bevacizumab)·Gemcitabine·CNI</strong> 투여 환자가 <span class="k">갑작스런 고혈압 + 단백뇨 + 부종 + AKI + 혈소판 감소</span>를 보이면 사망률 높은 <strong>혈전성 미세혈관병증(TMA)</strong>을 즉시 의심·중단해야 함.</li>
+            <li>NSAID+조영제, Cisplatin+AG, AG+Vancomycin 등 <span class="k">신독성 약물 병합 회피</span>가 가장 강력한 예방책.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 09 -->
+    <article class="lec-card" id="s9" data-part="part2">
+      <div class="lec-head">
+        <span class="lec-badge">09강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">약인성 간질환 (Drug-Induced Liver Injury, DILI)</h3>
+          <div class="lec-meta">서울대병원 이윤빈 · 40슬라이드</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec9" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s9">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">처방약뿐 아니라 한약(28%)·건강기능식품(14%)까지 포함한 배제 진단 질환으로, R ratio 분류와 Hy's Law·FDA 기준에 따른 조기 중단이 핵심.</p>
+        <div class="normal-block">
+          <div class="sub-h">분류 · 진단 기준 · 예후 · 특이 치료</div>
+          <ul>
+            <li><strong>국내 역학</strong>(전향연구, ~12/10만): <span class="k">한약/생약 28% &gt; 의약품 27% &gt; 건강기능식품 14%</span>. 과소보고율 중앙값 95%.</li>
+            <li><strong>내인성</strong>(용량 의존·짧은 잠복기·동물모델+: <span class="k">Acetaminophen</span>) vs <strong>특이반응성(80~95%)</strong>(감수성 개체·다양한 잠복기·동물모델−: <span class="k">INH</span>, halothane, chlorpromazine).</li>
+            <li><strong>R ratio</strong> = <code>(ALT/ULN) ÷ (ALP/ULN)</code>: <span class="k">R &gt;5 간세포형</span>(INH, diclofenac), <span class="k">R &lt;2 담즙정체형</span>(Amox/Clav, cefazolin, terbinafine), <strong>R 2~5 혼합형</strong>(anabolic steroid).</li>
+            <li><strong>진단</strong>: <span class="k">배제 진단</span>(바이러스·담도폐쇄·알코올·쇼크간 배제; 재투여 원칙 금지). <strong>CIOMS/RUCAM</strong>(&gt;8 definite, 6~8 probable) vs <strong>Maria &amp; Victorino</strong>(&gt;17 definite) — 두 체계 완전 일치율은 <span class="k">18%</span>로 임상·역학 연구 보조 도구로 활용.</li>
+            <li><strong>Hy's Law</strong>: 간세포성 손상 + <span class="k">ALT/AST &gt;3×ULN AND Bilirubin &gt;2×ULN</span> → <span class="k">사망률 10~50%</span>.</li>
+            <li><strong>US FDA 중단 기준</strong>: 간세포형(R ≥5) <code>ALT ≥8×ULN</code> / <code>≥5×ULN</code>(2주 지속) / <code>≥3×ULN</code> + (<code>Bil ≥2×ULN</code>·<code>INR ≥1.5</code>·증상); 담즙형(R ≤2) 황달 / <code>Bil ≥3×ULN</code> / <code>INR ≥1.5</code>.</li>
+            <li><strong>치료</strong>: 원인약 즉각 중단 + 보존치료. 특이치료: <strong>Acetaminophen → <span class="k">NAC</span></strong>, <strong>Valproate → <span class="k">L-carnitine</span></strong>, <strong>DRESS·AIH-like DILI → <span class="k">Steroid</span></strong>.</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 포인트</div>
+          <ul>
+            <li>간세포형 DILI(예: Diclofenac, R=25)에서도 빌리루빈은 ALT가 내려가는 시점에 뒤늦게 급등할 수 있으므로 <span class="k">초기 R ratio</span>로 손상 패턴을 판정해야 함.</li>
+            <li>임상시험 노출 환자 수(&lt;3,000명)로는 드문 DILI 검출이 불가능하므로(세리바스타틴 사례) 시판 후 임상의의 의심과 보고가 필수.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 10 -->
+    <article class="lec-card" id="s10" data-part="part2">
+      <div class="lec-head">
+        <span class="lec-badge">10강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">정신신경계질환과 약물이상반응</h3>
+          <div class="lec-meta">용인세브란스병원 정신건강의학과 김호정 · 35슬라이드</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec10" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s10">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">복약순응도가 매우 낮은(조현병 2년 17~18%, 우울증 6개월 44.3%) 정신약물에서 증상과 부작용을 정확히 감별하고, 흔하거나 치명적인 부작용을 불안을 조장하지 않게 소통·관리.</p>
+        <div class="normal-block">
+          <div class="sub-h">계열별 핵심 부작용 &amp; 대처</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>약물군 / 약물</th><th>핵심 · 치명적 부작용</th><th>감별 · 모니터링 · 처치</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>항우울제</strong></td>
+                  <td><strong>위장장애(60~80%, 1주 내 호전)</strong>, 어지러움, 구갈, 진정(1~2주 적응), 불면, 경한 진전, 체중↑(paroxetine, mirtazapine)</td>
+                  <td>위장장애: 소화효소제 근거 없음 → <span class="k">5-HT4 촉진제(mosapride 등)</span> + 안심. 불면은 아침 변경</td>
+                </tr>
+                <tr>
+                  <td><strong>Lithium</strong></td>
+                  <td><span class="k">갑상선저하 20%</span>, 신독성, 진전, <span class="k">리튬 중독</span>(말 어눌·보행장애·의식저하; <strong>노인 탈수/고열</strong> 시 정상용량도 위험)</td>
+                  <td><span class="k">6~12개월마다 TFT·BUN/Cr</span>; 진전 <strong>propranolol</strong>; 중독 시 즉시 중단·수액·<strong>혈액투석</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Valproate / Lamotrigine</strong></td>
+                  <td><strong>Valproate</strong>: 간수치↑·혈구↓·탈모<br><strong>Lamotrigine</strong>: <span class="k">피부발진 ~10%(초기 1~2주) → SJS</span></td>
+                  <td>Valproate: <span class="k">6개월마다 LFT·CBC</span>, 탈모는 감량 선호<br>Lamotrigine: 발진 시 <span class="k">즉시 중단·병원 진료</span>(초기 화장품 변경 금지)</td>
+                </tr>
+                <tr>
+                  <td><strong>Benzodiazepines</strong></td>
+                  <td><span class="k">COPD·수면무호흡·중증비만 호흡억제·돌연사</span>, 금단(경련)·의존, 노인 낙상·골절</td>
+                  <td>임의 중단 금지(점진 감량), 최소 용량·최단 기간(노인은 단기·반감기 짧은 제제)</td>
+                </tr>
+                <tr>
+                  <td><strong>Antipsychotics</strong></td>
+                  <td><strong>EPS</strong>(파킨슨증 / <strong>급성 근육긴장이상</strong> / <strong>정좌불능증</strong>), <strong>지연성 운동장애(TD)</strong>, 항콜린성(시야흐림), 고프로락틴, 대사증후군, <span class="k">Clozapine 무과립구증(1%)</span>, <span class="k">NMS(사망률 10~30%)</span></td>
+                  <td>긴장이상: <span class="k">응급 BZD 주사</span> / 정좌불능증: <span class="k">1차 Propranolol 30~120 mg</span> / TD: clozapine 교체 / Clozapine: <span class="k">첫 18주 매주→이후 매월 CBC</span> / NMS: 즉시 중단·수액·<span class="k">dantrolene·bromocriptine</span></td>
+                </tr>
+                <tr>
+                  <td><strong>치매약 (AChEI)</strong></td>
+                  <td>위장장애(식욕부진·구토) → <span class="k">체중 감소</span></td>
+                  <td>감량 또는 <span class="k">패치 제형 변경</span> ("식사 잘 하시는지" 모니터링)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 &amp; 최다 Q&amp;A 포인트</div>
+          <ul>
+            <li><strong>Q. "정신과 약 먹으면 치매 걸리나요?"</strong> → <span class="k">항정신병약물은 과학적 근거 전혀 없음</span>(조기 투약 시 오히려 인지 보호). BZD·Z-drug은 장기 과량 시 인지저하 우려로 최소·단기 처방.</li>
+            <li><strong>실무 복약지도 팁</strong>: Propranolol은 "불안·초조 가라앉히는 보조약"으로 안내; 항정신병약물 시야흐림은 <span class="k">안경 새로 맞추지 말고 의사 상의</span>; 조현병 환자에게 함부로 "살찌는 약" 언급 금지(임의 중단 위험).</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- PART III -->
+    <div class="part-banner" data-part="part3">
+      <div class="part-label">Part III · Lectures 11 – 15</div>
+      <h2>주요 약물군별 ADR 및 실무 가이드라인 (조영제 · 항생제 · 심혈관계 · 내분비계 · 면역항암제)</h2>
+    </div>
+
+    <!-- Lecture 11 -->
+    <article class="lec-card" id="s11" data-part="part3">
+      <div class="lec-head">
+        <span class="lec-badge">11강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">조영제와 약물이상반응 (조영제 사용 가이드라인)</h3>
+          <div class="lec-meta">은평성모병원 영상의학과 정승은 · 105슬라이드 · 2022 한국지침 3판</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec11" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s11">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">2022 한국 조영제 임상진료지침(3판)에 따른 요오드화·가돌리늄 조영제의 급성·지연성·신독성·NSF 예방·처치 및 감염관리·EMR 체계.</p>
+        <div class="normal-block">
+          <div class="sub-h">분류 · 신독성 · 메트포르민 · 전처치 · 특수상황</div>
+          <ul>
+            <li><strong>요오드 분류 &amp; 보관</strong>: LOCM(비이온성 단량체 6종) / IOCM(iodixanol: 삼투압 최저·점도 최고·지연성 호발). <span class="k">요오드는 37°C 가온 권고</span>, <span class="k">가돌리늄은 실온 원칙</span>.</li>
+            <li><strong>가돌리늄 분류</strong>: <strong>거대고리형</strong>(Dotarem·ProHance·Gadovist, 안전) vs <strong>선형</strong>(Magnevist·Omniscan 등 13품목, <span class="k">NSF·뇌 침착으로 2018년 공급 중단/금지</span>).</li>
+            <li><strong>급성(&lt;1h, 중증 30분 내)</strong>: LOCM &lt;2%, 사망 0.9/10만(위험: 과거력 재발 10~35%·천식·β차단제). <strong>지연성(1h~1주)</strong>: 0.5~14%(위험: <span class="k">IL-2 4주 내</span>·iodixanol).</li>
+            <li><strong>신독성(CA-AKI)</strong>: 72h 내 Cr ≥25% 또는 ≥0.5↑. 고위험: <span class="k">동맥 첫 통과/ICU eGFR &lt;45</span>, <span class="k">정맥 eGFR &lt;30</span>, AKI. 48~72h 내 반복 주입 자제, <span class="k">예방적 투석 근거 없음</span>. 신기능 검사: 급성/입원 <strong>7일 내</strong>, 일반 <strong>3~6개월 내</strong>.</li>
+            <li><strong>메트포르민 (2022 3판 개정)</strong>: AKI 없고 <span class="k">eGFR ≥30이면 중단·재평가 불필요</span>; AKI·<span class="k">eGFR &lt;30</span>·신동맥 색전위험 동맥시술 시 <span class="k">전후 48시간 중단</span> 후 재평가.</li>
+            <li><strong>전처치</strong>: <span class="k">검사 2시간 내 단회 투여는 근거 없음</span>(IV 스테로이드 최소 4~5시간 전). 예정: <span class="k">Prednisolone 50 mg PO(13, 7, 1h 전)</span> + 1h 전 chlorpheniramine 4 mg / 또는 MPD 32 mg PO(12, 2h 전). 응급: MPD 40 mg 또는 Hydrocortisone 200 mg IV(매 4h) + chlorpheniramine 4 mg IV.</li>
+            <li><strong>응급처치 &amp; 혈관외 유출</strong>: 코드블루·기도확보·다리거상·O2 6~10 L/min·저혈압 시 Pheniramine 0.5~1 vial IM/slow IV + 필요 시 Epinephrine<em>(원내 프로세스 슬라이드: 0.1 mg IM 표기)</em>. 유출 시 중단 → <span class="k">심장보다 높게 거상</span> → 냉/온찜질 → 2~4h 관찰.</li>
+            <li><strong>가돌리늄 특수</strong>: <strong>NSF</strong>(선형 절대금기: eGFR &lt;30·투석·AKI·임부·신생아; 투석환자 검사 직후 투석), <strong>Primovist 일시적 호흡곤란(4~14%</strong>, 비알레르기, 20 mL 시 2배, COPD 35~40%).</li>
+            <li><strong>임신·수유·소아·검사간격</strong>: 임신 중 요오드 시 <span class="k">출생 첫 주 신생아 TFT 확인</span>. <span class="k">요오드·중/저위험 가돌리늄은 수유 중단 불필요</span>(고위험 가돌리늄만 24h 중단). 소아 요오드 <span class="k">자동주입기 금지</span>. 혈액/소변검사 24h·응고검사 6h·갑상선 스캔 1~2개월 간격.</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 &amp; Q&amp;A 실전 포인트</div>
+          <ul>
+            <li><strong>일괄 사전 피부시험·소량 시험주사 절대 금지</strong>(중증 과거력자 대체약 선택용만 1~2개월 내 고려). <span class="k">성분명 변경</span>이 재발 감소의 핵심이나 <strong>방사선사 임의 변경 절대 금지</strong>.</li>
+            <li><strong>금식 오해</strong>: 흡인 예방 금식은 근거 없음, <span class="k">맑은 물은 제한 없이 섭취</span>(탈수→신독성 방지).</li>
+            <li><strong>다중 자동주입기(주사기 재사용) 유권해석</strong>: 식약처 허가(12/24h)대로 <span class="k">역류방지 필터 + 환자마다 연결 튜브·필터 교체</span> 시 적법(결핵·감염 환자 즉시 폐기). 방사선사는 버튼·라인 제거 가능하나 <span class="k">정맥 바늘 삽입·제거는 의사·간호사만 가능</span>.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 12 -->
+    <article class="lec-card" id="s12" data-part="part3">
+      <div class="lec-head">
+        <span class="lec-badge">12강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">항생제와 약물이상반응</h3>
+          <div class="lec-meta">분당서울대병원 황은정 · 69슬라이드 · R1 곁사슬 · ESCMID 2026 · 결핵지침 5판</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec12" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s12">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">감염 단계에 맞는 최협소 스펙트럼 선택과 계열별 장기 독성 모니터링, β-lactam R1/R2 곁사슬 기반 교차반응 평가 및 ESCMID 2026 위험층화.</p>
+        <div class="normal-block">
+          <div class="sub-h">계열별 필수 암기 부작용 · 상호작용</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>계열 / 약물</th><th>핵심 부작용 · 상호작용 · 주의</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Penicillins / BLI</strong></td><td>아나필락시스(0.01~0.05%), Nafcillin(CYP3A4 유도), <span class="k">Vancomycin + Pip/Tazo 신독성↑</span></td></tr>
+                <tr><td><strong>Cephalosporins</strong></td><td><span class="k">Ceftriaxone 담도 오니·가담석증</span>(신생아·≤2세 회피 → cefotaxime), 3세대 <em>C. diff</em>↑</td></tr>
+                <tr><td><strong>Carbapenems</strong></td><td>Ertapenem은 녹농균·A. baumannii 무효; <span class="k">경련(imipenem &gt; ertapenem &gt; meropenem)</span>; <span class="k">Valproic acid 농도 급감</span></td></tr>
+                <tr><td><strong>Fluoroquinolones</strong></td><td><span class="k">아킬레스건 파열</span>(≥60세·스테로이드), <span class="k">QT 연장</span>(moxi), 말초신경염, 중증근무력증 악화, 대동맥박리, <strong>2가 양이온 2h 전·6h 후</strong></td></tr>
+                <tr><td><strong>Glycopeptides</strong></td><td>Vancomycin <span class="k">신독성(TDM 필수) · Red man syndrome(≥1시간 주입)</span>; Teicoplanin(3~5회 부하용량)</td></tr>
+                <tr><td><strong>Daptomycin / Linezolid</strong></td><td>Daptomycin: <span class="k">폐렴·CNS 부적합, CPK 모니터</span> / Linezolid: <span class="k">혈소판감소증</span>(고빈도, 1~2주에도 발생)</td></tr>
+                <tr><td><strong>Aminoglycosides</strong></td><td>1일 1회 유리, 신독성(10~15%, 가역), <span class="k">이독성(1~5%, 비가역, ≥10일 청력검사 필수)</span></td></tr>
+                <tr><td><strong>Macrolides / Tetracyclines</strong></td><td>Macrolide: 주사도 GI, 16일+ 담즙정체간염, <span class="k">&lt;6주 신생아 유문협착</span>, <span class="k">QTc &gt;500 ms 회피</span><br>Tetracycline: <span class="k">≤8세·임부 치아변색 금기</span>(doxy 단기 예외), Minocycline 비가역 피부변색</td></tr>
+                <tr><td><strong>Metronidazole / TMP-SMX / Clindamycin</strong></td><td>Metronidazole: 음주 반응, <span class="k">≥4주 비가역 말초신경병증</span> / TMP-SMX: 과민(1.5~3%, SJS)·고K·가성 Cr↑ / Clindamycin: <span class="k"><em>C. diff</em> 최다(종료 후 8주 내 주의)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="sub-h">β-Lactam R1/R2 곁사슬 교차반응 &amp; ESCMID 2026</div>
+          <ul>
+            <li><strong>동일/유사 곁사슬 그룹</strong>: <span class="k">Amoxicillin ↔ Ampicillin ↔ Cefadroxil·Cefprozil·Cefaclor·Cephalexin</span> | <span class="k">Ceftriaxone ↔ Cefotaxime·Cefpodoxime·Cefepime</span> | <span class="k">Ceftazidime ↔ Aztreonam</span> | Cefotetan ↔ Cefamandole(R2).</li>
+            <li><span class="k">Cefazolin</span>은 타 약제와 곁사슬 유사성이 거의 없어 교차반응 가능성 매우 낮음.</li>
+            <li><strong>ESCMID 2026</strong>: <strong>Very low risk</strong>(내약/가족력/GI) → 검사 없이 라벨 제거 | <strong>Low risk</strong>(β-lactam <span class="k">&gt;5년 전</span> 비중증 등) → 조절된 약물 유발시험(양성 시 곁사슬 다른 세파·모노박탐·모든 카바페넴 가능) | <strong>High risk</strong>(두드러기·아나필락시스·SCAR·β-lactam &lt;5년 내 비중증) → 알레르기 전문의 협진.</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 &amp; 결핵진료지침 5판(2024) 핵심</div>
+          <ul>
+            <li>소아 항생제 ADR의 <span class="k">30%가 퇴원 후 발생</span> → 퇴원·외래 장기 투여 시 추적검사 누락 주의.</li>
+            <li><strong>결핵진료지침 5판(2024)</strong>: 무증상 <span class="k">ALT ≥5×ULN</span> 또는 유증상 <span class="k">ALT ≥3×ULN</span> 시 즉시 중단 / 혈소판감소증 시 <span class="k">Rifampin 즉시 중단·회복 후에도 재투여 금지</span> / PZA 관절통은 유지+NSAID(단 <span class="k">통풍 시 중단</span>).</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 13 -->
+    <article class="lec-card" id="s13" data-part="part3">
+      <div class="lec-head">
+        <span class="lec-badge">13강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">심혈관계약물과 약물이상반응</h3>
+          <div class="lec-meta">서울성모병원 김유경 약사 · 67슬라이드 · WHO ATC 8계열</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec13" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s13">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">WHO ATC 8대 심혈관계 약물 계열의 5대 질환(고혈압·지질·IHD·부정맥·심부전) 적용과 계열·성분별 특징적 ADR·모니터링·해독제.</p>
+        <div class="normal-block">
+          <div class="sub-h">5대 질환 기준 &amp; 계열별 핵심 ADR · 해독제</div>
+          <ul>
+            <li><strong>질환 핵심</strong>: 고혈압 일반 &lt;140/90 · 고위험 ≤130/80(시작부터 2제 병합, 저항성 시 <strong>spironolactone 25~50 mg</strong>). ACS/DES 후 <strong>DAPT 12개월</strong>(PPI 병용 고려). HFrEF 생존율 개선: <span class="k">ACEi(ARB)·ARNI·BB·MRA·H-ISDN</span> / 증상 개선만: 이뇨제·Digoxin.</li>
+          </ul>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>계열 / 약물</th><th>특징적 ADR</th><th>모니터링 · 해독제 · 주의</th></tr></thead>
+              <tbody>
+                <tr><td><strong>항혈소판 · 항응고</strong></td><td><strong>Ticagrelor</strong> <span class="k">호흡곤란(14~21%)</span>, <strong>Cilostazol</strong> <span class="k">두통(27~34%)</span>, <strong>Warfarin</strong> 조직괴사·보라색 발가락·Calciphylaxis·임신 X, <strong>Dabigatran</strong> <span class="k">위장장애</span>, <strong>UFH</strong> <span class="k">HIT</span>·골다공증</td><td>출혈 기준 <strong>BARC 0~5b</strong>. 해독제: Warfarin <span class="k">Vit K</span> / Dabigatran <span class="k">Idarucizumab</span>(국내 유일 NOAC) / Xa억제제 PCC / Heparin <span class="k">Protamine</span></td></tr>
+                <tr><td><strong>Digoxin / NTG / 항부정맥</strong></td><td><strong>NTG</strong> 메트헤모글로빈혈증. <strong>Amiodarone</strong> <span class="k">폐섬유화(3~17%)·광과민·청회색 피부·갑상선 항진(3%)/저하(30%)</span>. <strong>Dronedarone</strong> <span class="k">sCr↑ 51%(세뇨관 분비 억제, GFR 무영향)</span>. <strong>Sotalol</strong> TdP·기관지경련</td><td>Amiodarone 직사광선 회피. 항부정맥제는 과도 시 부정맥 악화 주의</td></tr>
+                <tr><td><strong>α차단제 · 이뇨제 · BB</strong></td><td><strong>α차단제</strong> 초회 기립성 저혈압·실신. <strong>Thiazide</strong> 저K·<span class="k">고Ca·고요산(통풍 금기)</span>. <strong>Spironolactone</strong> <span class="k">고K·여성형 유방</span>(Eplerenone 없음). <strong>BB</strong> 서맥·<span class="k">저혈당/갑상선중독 은폐</span>·기도저항↑</td><td>α차단제 <strong>PDE-5i 병용 주의</strong>. Loop은 eGFR &lt;30 사용. BB 천식/COPD 주의</td></tr>
+                <tr><td><strong>CCB · RAS · 지질약</strong></td><td><strong>CCB</strong> 말초부종·<span class="k">잇몸비후(DIGO)</span>·Non-DHP 심장억제(HFrEF 주의)·<span class="k">속효성 Nifedipine(MI 1~2주·ACS 금기)</span>. <strong>ACEi</strong> <span class="k">마른기침(1~12%)·혈관부종(즉시 중단)</span>, 양측 신동맥협착·임부 금기. <strong>Statin</strong> 간·근육(CK ≥10×ULN)</td><td><strong>Statin + Fibrate</strong> 횡문근융해↑ 회피. 황달 동반 간손상 시 동계열 재투여 금지</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조 포인트</div>
+          <ul>
+            <li>실제 임상에서 Dabigatran → 타 NOAC 변경 주원인은 <span class="k">위장장애</span>이며, 국내 허가 NOAC 해독제는 Dabigatran용 <span class="k">Idarucizumab</span>뿐임.</li>
+            <li>Dronedarone의 sCr 상승(~0.1)은 세뇨관 분비 억제에 의한 것으로 실제 GFR 저하가 아님. Statin 혈당 상승은 당뇨 환자의 처방을 막는 금기가 아님.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 14 -->
+    <article class="lec-card" id="s14" data-part="part3">
+      <div class="lec-head">
+        <span class="lec-badge">14강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">내분비계약물과 약물이상반응 (당뇨병 · 스타틴)</h3>
+          <div class="lec-meta">서울성모병원 내분비내과 김헌성 · 65슬라이드 · ★10문제 출제 명시</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec14" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s14">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">당뇨병 최신 약제(SGLT2i·DPP-4i·GLP-1RA·인슐린)와 스타틴 2대 핵심 이슈(근육병증/노시보 효과·혈당 상승)의 기전·교육·대처 원칙.</p>
+        <div class="normal-block">
+          <div class="sub-h">당뇨병 약물 핵심</div>
+          <ul>
+            <li>1차 <strong>Metformin</strong>; 동반질환(<strong>ASCVD·HF·CKD</strong>) 시 기저 HbA1c와 무관하게 <span class="k">SGLT2i 또는 GLP-1RA</span> 우선(HF·CKD는 SGLT2i 1순위, HF에서 TZD 금기).</li>
+            <li><strong>SGLT2i</strong>: 하루 당 70g(280 kcal) 소변 배설(저혈당 없음·체중/혈압/요산↓·심부전/신장 보호). 부작용: <span class="k">생식기 진균감염·UTI, 탈수, 정상혈당 DKA</span> → <strong>회음부 가려움 안내·위생·충분한 수분 섭취</strong> 교육.</li>
+            <li><strong>DPP-4i</strong>: 식후혈당·부작용 최소. <span class="k">신기능 저하 용량조절 불필요 3종: Linagliptin(트라젠타, 대변 84%) · Gemigliptin · Teneligliptin</span>. Saxagliptin만 심부전 입원↑(HR 1.27).</li>
+            <li><strong>GLP-1RA</strong>(빅토자=삭센다, 트루리시티 주1회): 강력한 HbA1c↓ + <span class="k">체중 감량</span> + 저혈당 적음. 부작용: <span class="k">오심·구토(포만감 기전) → 저용량 시작, 1~2주 적응 시 소실</span>.</li>
+            <li><strong>인슐린</strong>: <strong>지속형(투제오·트레시바)</strong> = <span class="k">1일 1회, 공복 목표 80~130</span>, 저혈당 적음 / <strong>초속효성</strong> = 식전 10분, 식후 2h 90~180 (<strong>식사 안 하면 SU·초속효성도 반드시 생략</strong>).</li>
+          </ul>
+          <div class="sub-h">스타틴 2대 핵심 이슈 (근육병증 · 혈당 상승)</div>
+          <ul>
+            <li>콜레스테롤 <span class="k">간 합성 80~90%</span> → 중단 시 <span class="k">3주 내 원상복귀</span>. 등가성: <span class="k">Rosuva 10 ≈ Atorva 20 ≈ Simva 40</span>. 중단 기준: <strong>간효소 ≥3×ULN</strong>, <strong>CK ≥10×ULN</strong>(rhabdomyolysis &gt;40×ULN).</li>
+            <li><strong>근육병증 &amp; 노시보(Nocebo)</strong>: ASCOT-LLA 비눈가림 시만 근육통↑(HR 1.41 vs 1.03). 진성 특징: <span class="k">6개월 전후, 근위부·대칭적, 중단 시 호전</span>(최대 2개월 유지 가능). TSH·CK 확인 → ESC/EAS: <code>CK ≥4×ULN</code> 6주 washout / <code>&lt;4×ULN</code> 2~4주 washout 후 저용량·격일·주1~2회 재시도.</li>
+            <li><strong>혈당 상승/신규 당뇨</strong>: 평균 <span class="k">9%↑(OR 1.09)</span>. <strong>3대 위험인자</strong>: ① <span class="k">장기 투약</span> ② <span class="k">고용량</span> ③ <span class="k">아시아인(HR 1.78)</span>. Pitavastatin은 중립이나 LDL 강하력 약함. <strong>심혈관 이득이 압도적이므로 적극 처방·지속</strong>.</li>
+          </ul>
+        </div>
+        <div class="callout exam">
+          <div class="callout-title">★ 강사 직접 명시 시험 출제 포인트 (10문항)</div>
+          <ul>
+            <li><strong>당뇨 5문항</strong>: ① 조기 약물 중단 <span class="badge-x">X</span> ② SGLT2i 부작용 없다 <span class="badge-x">X</span> ③~④ <strong>GLP-1RA 2문항</strong>(체중 감량 <span class="badge-o">O</span> 체중 증가 <span class="badge-x">X</span>, 저혈당 적음, 오심·구토 1~2주 적응) ⑤ <strong>지속형 인슐린</strong>(1일 1회, 공복 80~130, 저혈당 적음).</li>
+            <li><strong>지질 5문항</strong>: ⑥ HDL↑·LDL↓ ⑦ 스타틴 근육병증 중단해도 계속 심한 통증 <span class="badge-x">X</span>(중단 시 호전) ⑧~⑩ <strong>스타틴-당뇨 3문항</strong>(위험인자 3종 숙지; "당뇨 환자 피해야 함 <span class="badge-x">X</span>" / "아무 관련 없음 <span class="badge-x">X</span>" / "수치 좋아지면 중단 <span class="badge-x">X</span>").</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lecture 15 -->
+    <article class="lec-card" id="s15" data-part="part3">
+      <div class="lec-head">
+        <span class="lec-badge">15강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">면역항암제와 약물이상반응 (ICI · irAE · HPD)</h3>
+          <div class="lec-meta">한림대 성심병원 호흡기내과 장승훈 · 40슬라이드</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec15" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s15">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">면역관문억제제(CTLA-4/PD-1/PD-L1)의 전신 irAE Grade별 스테로이드 치료 원칙과, 14~20%에서 조기 사망을 부르는 급성진행(HPD) 조기 감시.</p>
+        <div class="normal-block">
+          <div class="sub-h">irAE 특성 · Grade별 및 장기별 처치</div>
+          <ul>
+            <li><strong>기전</strong>: Priming(<span class="k">CTLA-4</span>: Ipilimumab) vs Effector(<span class="k">PD-1</span>: Nivolumab·Pembrolizumab / <span class="k">PD-L1</span>: Atezolizumab·Durvalumab). 빈도·중증도: <span class="k">CTLA-4 &gt; PD-1 &gt; PD-L1</span>. 대개 1~3개월 내 발생하나 종료 후에도 발생, <strong>내분비 이상은 영구적</strong>.</li>
+            <li><strong>일반 치료(기준 MPD)</strong>: <strong>G1</strong> 지속 | <strong>G2</strong> 연기 + <span class="k">0.5~1 mg/kg/d</span> | <strong>G3</strong> 연기·득실평가 + <span class="k">1~2 mg/kg/d</span> | <strong>G4</strong> <span class="k">영구중단</span> + 1~2 mg/kg/d. 3~5일 미호전 시 추가 면역억제제.</li>
+            <li><strong>장기별 특이 처치</strong>:
+              <ul>
+                <li><strong>폐렴(G3~4, 치명적)</strong>: 영구중단 + <span class="k">MPD 2~4 mg/kg/d</span> + <span class="k">6주 감량</span>(타 장기 1개월보다 긺) + &gt;2주 고용량 시 <span class="k">예방적 박트림</span>.</li>
+                <li><strong>장염(G3~4)</strong>: 3~5일 불응 시 <span class="k">Infliximab 5 mg/kg</span>(패혈증·천공 제외).</li>
+                <li><strong>간염(G3~4)</strong>: 3~5일 불응 시 <span class="k">Mycophenolate 1 g bid</span>.</li>
+                <li><strong>뇌신경(G3~4)</strong>: 영구중단 + 악화 시 <span class="k">IVIG</span>. <strong>Adrenal crisis</strong>: 패혈증 감별 + stress dose IV steroid.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="callout danger">
+          <div class="callout-title">★ 강사 강조: 가성진행 vs 급성진행(HPD, "양날의 검")</div>
+          <ul>
+            <li><strong>가성진행</strong>: T세포 염증 침윤으로 일시적 종양 확대 후 축소(최근 <span class="k">2.1~4.7%</span>).</li>
+            <li><strong>급성진행(HPD)</strong>: 국내 <span class="k">14.3~20.9%</span>(사망 위험 <strong>HR 5.08</strong>, 1.5~4개월 내 다수 사망), 기전 불명·사전 예측 불가 → <span class="k">치료 초기 1~3개월 면밀 감시</span> 후 HPD 판단 시 지체 없이 타 항암제로 전환.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- PART IV -->
+    <div class="part-banner" data-part="part4">
+      <div class="part-label">Part IV · Lecture 16</div>
+      <h2>특수집단 — 임산부와 약물이상반응</h2>
+    </div>
+
+    <!-- Lecture 16 -->
+    <article class="lec-card" id="s16" data-part="part4">
+      <div class="lec-head">
+        <span class="lec-badge">16강</span>
+        <div class="lec-title-wrap">
+          <h3 class="lec-title">임산부와 약물이상반응 (기형학 · 상담 · 이소트레티노인 RMP)</h3>
+          <div class="lec-meta">국립중앙의료원 산부인과 / 마더세이프 센터장 한정렬 · 71슬라이드</div>
+        </div>
+        <div class="lec-actions">
+          <a class="lec-orig" href="index.html#lec16" onclick="event.stopPropagation()">원본 ↗</a>
+          <label class="done-label" onclick="event.stopPropagation()"><input type="checkbox" data-done="s16">완료</label>
+          <span class="toggle-ico">▾</span>
+        </div>
+      </div>
+      <div class="lec-body">
+        <p class="one-liner">기형학 6원칙·2015 FDA New Labeling·근거 기반 상담(마더세이프 1588-7309)으로 불필요한 임신중절을 예방하고, 이소트레티노인 RMP를 철저히 실천.</p>
+        <div class="normal-block">
+          <div class="sub-h">기형학 6원칙(Wilson) · 분류 체계 · 대표 기형유발 약물</div>
+          <ul>
+            <li><strong>기형 자연발생률(Baseline)</strong>: <span class="k">2~3%</span>(약물·화학물질 4~5%). 역사적 사건: <strong>Thalidomide</strong>(Phocomelia ~20%, 랫드 위음성→토끼 재현 → <span class="k">동물시험 ≥2종 규정</span>), <strong>DES</strong>(딸 질 투명세포선암·다음 세대 남아 요도하열증).</li>
+            <li><strong>기형학 6원칙</strong>: ① 유전형(Phenytoin-epoxide hydrolase) ② <strong>노출 시기</strong>: 착상전기(수정 0~2주, <span class="k">All or None</span>) → <span class="k">기관형성기(수정 2~8주, 주요 기형 민감기)</span> → 태아기(8주~, 기능 결함) ③ 특정 기전(<strong>Isotretinoin</strong> neural crest 이동 방해 → <span class="k">주요기형 35%</span>, 기형 없어도 지능저하 25%) ④ 태반 통과(<span class="k">&lt;600 Da</span>; 인슐린 ~6,000 Da 미통과) ⑤ 4대 표현형 ⑥ <strong>용량-반응</strong>(<strong>Valproic acid</strong> &lt;700 mg 5.9% → 700~1,500 mg 11.0% → <span class="k">≥1,500 mg 24.0%</span>).</li>
+            <li><strong>2015 FDA New Labeling</strong>: 기존 A/B/C/D/X(대부분 C, X 각인효과) 폐지 → Registry·Risk Summary·Clinical Considerations(<span class="k">단일클론항체는 3분기 태반 통과 최대 → 출생아 생백신 주의</span>)·Data. 위양성 교훈: <strong>Bendectin</strong>(doxylamine+B6) → 2013 Diclegis 재승인.</li>
+            <li><strong>대표 기형유발 약물</strong>: <strong>Isotretinoin/Retinoids</strong>(소이증·수두증·심기형·지능저하), <strong>Valproic acid</strong>(이분척추·저IQ), <strong>ACEi</strong>(양수과소증·신생아 무뇨·두개골 저형성), <strong>Warfarin</strong>(코 저형성·연골이형성), <strong>NSAIDs</strong>(동맥관 조기폐쇄), <strong>Tetracyclines</strong>(치아변색), <strong>Lithium</strong>(Ebstein 심기형), <strong>Paroxetine</strong>(VSD/ASD·PPHN), <strong>Methimazole</strong>(두피 피부 무형성증 → 가임기 PTU 선호), MTX·Mycophenolate·Leflunomide·Misoprostol·고용량 Fluconazole.</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <div class="callout-title">★ 강사 강조: 근거 기반 상담 · 이소트레티노인 RMP · 1588-7309</div>
+          <ul>
+            <li>비계획 임신 ~50%; 일반 감기약 노출 임산부도 위험을 <strong>39.5%</strong>로 과대 인식 → 상담 후 <strong>10.8%</strong>로 감소(임신 유지 전환 35%). 초기 경구피임약(5주) 노출도 baseline(~3%)을 넘지 않아 중절 불필요.</li>
+            <li><strong>이소트레티노인 RMP(2019.6~, 레티노이드 3종)</strong>: 연 40만 건(87.1% 비보험), <span class="k">중단 후 30일 이후 임신</span>. 4대 수칙: ① 위험·피임 설명 ② <span class="k">환자 서면 동의</span>(현장 미서명 72.4%!) ③ <span class="k">비임신 확인 후</span> 처방·조제 ④ <span class="k">최대 30일 처방</span>(1주 내 조제).</li>
+            <li><strong>반드시 기억할 번호</strong>: 마더세이프 전문상담센터 <span class="k">1588-7309</span>.</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+  </main>
+</div>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'adr-summary-done-v1';
+  const cards = Array.from(document.querySelectorAll('.lec-card'));
+  const navLinks = Array.from(document.querySelectorAll('.sidebar a[data-nav]'));
+  const checkboxes = Array.from(document.querySelectorAll('input[data-done]'));
+  const progressPill = document.getElementById('progressPill');
+
+  // 1. Progress persistence
+  let doneMap = {};
+  try { doneMap = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (_) {}
+
+  function updateProgress() {
+    let count = 0;
+    checkboxes.forEach(cb => {
+      const id = cb.dataset.done;
+      const checked = !!doneMap[id];
+      cb.checked = checked;
+      if (checked) count++;
+      const nav = document.querySelector(`.sidebar a[data-nav="${id}"]`);
+      if (nav) nav.classList.toggle('done-nav', checked);
+    });
+    progressPill.textContent = `${count} / ${checkboxes.length} 완료`;
+  }
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      doneMap[cb.dataset.done] = cb.checked;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(doneMap)); } catch (_) {}
+      updateProgress();
+    });
+  });
+  updateProgress();
+
+  // 2. Card collapse / expand
+  cards.forEach(card => {
+    card.querySelector('.lec-head').addEventListener('click', () => {
+      card.classList.toggle('collapsed');
+      syncToggleAllLabel();
+    });
+  });
+
+  const btnToggleAll = document.getElementById('btnToggleAll');
+  function syncToggleAllLabel() {
+    const visibleCards = cards.filter(c => !c.classList.contains('hidden'));
+    const allCollapsed = visibleCards.length > 0 && visibleCards.every(c => c.classList.contains('collapsed'));
+    btnToggleAll.textContent = allCollapsed ? '모두 펼치기' : '모두 접기';
+  }
+  btnToggleAll.addEventListener('click', () => {
+    const visibleCards = cards.filter(c => !c.classList.contains('hidden'));
+    const shouldExpand = visibleCards.every(c => c.classList.contains('collapsed'));
+    visibleCards.forEach(c => c.classList.toggle('collapsed', !shouldExpand));
+    syncToggleAllLabel();
+  });
+
+  // 3. Part filter tabs
+  const filterBtns = Array.from(document.querySelectorAll('.filter-btn'));
+  const partItems = Array.from(document.querySelectorAll('[data-part]'));
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      partItems.forEach(el => {
+        el.classList.toggle('hidden', f !== 'all' && el.dataset.part !== f);
+      });
+      syncToggleAllLabel();
+    });
+  });
+
+  // 4. Quiz (Cloze) mode
+  const btnQuiz = document.getElementById('btnQuiz');
+  const btnRevealAll = document.getElementById('btnRevealAll');
+  const keySpans = Array.from(document.querySelectorAll('.k'));
+
+  btnQuiz.addEventListener('click', () => {
+    const on = document.body.classList.toggle('quiz-mode');
+    btnQuiz.setAttribute('aria-pressed', String(on));
+    if (!on) keySpans.forEach(k => k.classList.remove('revealed'));
+  });
+  keySpans.forEach(k => {
+    k.addEventListener('click', (e) => {
+      if (!document.body.classList.contains('quiz-mode')) return;
+      e.stopPropagation();
+      k.classList.toggle('revealed');
+    });
+  });
+  btnRevealAll.addEventListener('click', () => {
+    const allRevealed = keySpans.every(k => k.classList.contains('revealed'));
+    keySpans.forEach(k => k.classList.toggle('revealed', !allRevealed));
+  });
+
+  // 5. Tips-only mode
+  const btnTipsOnly = document.getElementById('btnTipsOnly');
+  btnTipsOnly.addEventListener('click', () => {
+    const on = document.body.classList.toggle('tips-only');
+    btnTipsOnly.setAttribute('aria-pressed', String(on));
+    if (on) cards.forEach(c => c.classList.remove('collapsed'));
+  });
+
+  // 6. Print button
+  document.getElementById('btnPrint').addEventListener('click', () => window.print());
+
+  // 7. Search with highlight & navigation
+  const qInput = document.getElementById('q');
+  const qCount = document.getElementById('qCount');
+  const qPrev = document.getElementById('qPrev');
+  const qNext = document.getElementById('qNext');
+  const content = document.getElementById('content');
+  let hits = [];
+  let curIdx = -1;
+
+  function clearHits() {
+    content.querySelectorAll('mark.hit').forEach(m => {
+      const parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+    hits = [];
+    curIdx = -1;
+    qCount.textContent = '';
+  }
+
+  function highlightTerm(term) {
+    clearHits();
+    const trimmed = term.trim();
+    if (!trimmed) return;
+    const lower = trimmed.toLowerCase();
+    const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const p = node.parentElement;
+        if (!p || p.closest('.filters, .quiz-hint, .lec-actions')) return NodeFilter.FILTER_REJECT;
+        return node.nodeValue.toLowerCase().includes(lower) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    textNodes.forEach(node => {
+      const val = node.nodeValue;
+      const valLow = val.toLowerCase();
+      let start = 0;
+      let idx;
+      const frag = document.createDocumentFragment();
+      while ((idx = valLow.indexOf(lower, start)) !== -1) {
+        if (idx > start) frag.appendChild(document.createTextNode(val.slice(start, idx)));
+        const mark = document.createElement('mark');
+        mark.className = 'hit';
+        mark.textContent = val.slice(idx, idx + trimmed.length);
+        frag.appendChild(mark);
+        hits.push(mark);
+        start = idx + trimmed.length;
+      }
+      if (start < val.length) frag.appendChild(document.createTextNode(val.slice(start)));
+      node.parentNode.replaceChild(frag, node);
+    });
+
+    if (hits.length > 0) {
+      jumpHit(0);
+    } else {
+      qCount.textContent = '0건';
+    }
+  }
+
+  function jumpHit(nextIdx) {
+    if (!hits.length) return;
+    if (curIdx >= 0 && hits[curIdx]) hits[curIdx].classList.remove('current');
+    curIdx = (nextIdx + hits.length) % hits.length;
+    const target = hits[curIdx];
+    const card = target.closest('.lec-card');
+    if (card) {
+      card.classList.remove('collapsed');
+      if (card.classList.contains('hidden')) {
+        filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+        partItems.forEach(el => el.classList.remove('hidden'));
+      }
+    }
+    target.classList.add('current');
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    qCount.textContent = `${curIdx + 1}/${hits.length}`;
+  }
+
+  let debounceTimer;
+  qInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => highlightTerm(qInput.value), 180);
+  });
+  document.getElementById('searchForm').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!hits.length && qInput.value.trim()) highlightTerm(qInput.value);
+    else jumpHit(curIdx + 1);
+  });
+  qNext.addEventListener('click', () => jumpHit(curIdx + 1));
+  qPrev.addEventListener('click', () => jumpHit(curIdx - 1));
+
+  // 8. Active sidebar tracking on scroll
+  const sections = [document.getElementById('cheatsheet'), ...cards];
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        document.querySelectorAll('.sidebar a').forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+  sections.forEach(s => s && observer.observe(s));
+})();
+</script>
+</body>
+</html>

@@ -138,7 +138,7 @@
     color: #16325c;
     background: #fff;
   }
-  .tools button {
+  .tools button, .tools a.summary-link {
     font: inherit;
     font-size: 13px;
     padding: 6px 10px;
@@ -147,6 +147,14 @@
     background: #f4f7fb;
     color: #16325c;
     cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .tools a.summary-link {
+    font-weight: 650;
+    border-color: #1d3f73;
+    color: #1d3f73;
   }
   .tools button[aria-pressed="true"] { background: #ffe39a; border-color: #e0b03a; }
   #pen[aria-pressed="true"] { background: #ffc2e2; border-color: #e06aa0; }
@@ -308,6 +316,7 @@
   <button type="button" id="pen" aria-pressed="false" title="누른 뒤 글자를 드래그하면 표시되고, 이 브라우저와 오른쪽 아래 코드에 남습니다">형광펜</button>
   <button type="button" id="eraser" aria-pressed="false" title="지울 글자를 드래그하거나 표시를 클릭합니다">지우개</button>
   <span id="markcount" class="count" aria-live="polite"></span>
+  <a class="summary-link" href="summary.html" title="전체 16강 핵심 요약 및 암기 모드로 이동">핵심 요약</a>
   <div id="tocdock">
     <div id="tocpanel" hidden>
       <a class="toc-all" href="#toc">전체 목차</a>

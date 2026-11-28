@@ -5,7 +5,8 @@ Static GitHub Pages site for the lecture notes.
 ## Live
 
 - Home: https://coinyak.github.io/adr-study/
+- Core Summary: https://coinyak.github.io/adr-study/summary.html
 
 ## Source
 
-Self-contained lecture HTML (`index.html`). Images are embedded in the page.
+Self-contained lecture HTML (`index.html`) and interactive 16-lecture core summary (`summary.html`). Images are embedded in the page.
