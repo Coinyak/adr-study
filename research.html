@@ -15,9 +15,9 @@
     --border-soft: #e6edf5;
     --bg-card: #f4f7fb;
     --bg-head: #eef3f9;
-    --research: #4f46e5;
-    --research-bg: #eef2ff;
-    --research-border: #a5b4fc;
+    --research: #1d3f73;
+    --research-bg: #f1f5fa;
+    --research-border: #bfd0e6;
     --gold-bg: #fff6db;
     --gold-border: #e5b94c;
     --red-bg: #fdf2f2;
@@ -41,8 +41,8 @@
 
   /* Research Disclaimer Strip */
   .research-strip {
-    background: #1e1b4b;
-    color: #e0e7ff;
+    background: #162336;
+    color: #dbe6f5;
     font-size: 12.2px;
     padding: 7px 18px;
     text-align: center;
@@ -328,7 +328,7 @@
     box-shadow: 0 4px 18px rgba(29, 63, 115, 0.06);
   }
   .sim-head {
-    background: linear-gradient(135deg, #1d3f73, #312e81);
+    background: #1d3f73;
     color: #fff;
     padding: 14px 18px;
     display: flex;
@@ -653,6 +653,92 @@
     font-size: 11px;
     color: #475569;
   }
+  /* Live Wireframe Theme Variants (Warm Paper / Cool Slate / Soft Sage) */
+  .wireframe[data-theme="warm"] { border-color: #dfd9cf; background: #f7f6f2; }
+  .wireframe[data-theme="warm"] .wf-topbar { background: #fbfaf7; border-bottom-color: #e7e3db; }
+  .wireframe[data-theme="warm"] .wf-pane { background: #fbfaf7; }
+  .wireframe[data-theme="warm"] .wf-pane.desk { background: #efede8; }
+  .wireframe[data-theme="warm"] .wf-chip { background: #f3f1ec; border-color: #ddd8ce; color: #2c2825; }
+  .wireframe[data-theme="warm"] .wf-chip.cta { background: #1e3a5f; border-color: #1e3a5f; color: #fff; }
+  .wireframe[data-theme="warm"] .wf-bubble { background: #f4f2ec; border-color: #e5e1d8; }
+  .wireframe[data-theme="warm"] .wf-bubble.user { background: #ebe8e0; border-color: #dcd6ca; }
+  .wireframe[data-theme="warm"] .wf-card { background: #ffffff; border-color: #e5e1d8; border-radius: 10px; box-shadow: 0 1px 3px rgba(28,25,23,0.04); }
+  .wireframe[data-theme="warm"] .wf-legend { background: #f7f6f2; border-top-color: #e5e1d8; }
+
+  .wireframe[data-theme="cool"] { border-color: #cbd5e1; background: #f4f6f9; }
+  .wireframe[data-theme="cool"] .wf-topbar { background: #ffffff; border-bottom-color: #e2e8f0; }
+  .wireframe[data-theme="cool"] .wf-pane { background: #fafbfd; }
+  .wireframe[data-theme="cool"] .wf-pane.desk { background: #e9eef5; }
+  .wireframe[data-theme="cool"] .wf-chip { background: #f1f5f9; border-color: #cbd5e1; color: #0f172a; }
+  .wireframe[data-theme="cool"] .wf-chip.cta { background: #1d3f73; border-color: #1d3f73; color: #fff; }
+  .wireframe[data-theme="cool"] .wf-card { background: #ffffff; border-color: #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(15,23,42,0.04); }
+
+  .wireframe[data-theme="sage"] { border-color: #cfe0d6; background: #f4f7f5; }
+  .wireframe[data-theme="sage"] .wf-topbar { background: #fafcfa; border-bottom-color: #dce6e0; }
+  .wireframe[data-theme="sage"] .wf-pane { background: #fafcfa; }
+  .wireframe[data-theme="sage"] .wf-pane.desk { background: #e8f0eb; }
+  .wireframe[data-theme="sage"] .wf-chip { background: #edf3ef; border-color: #cfe0d6; color: #182a24; }
+  .wireframe[data-theme="sage"] .wf-chip.cta { background: #1f4e46; border-color: #1f4e46; color: #fff; }
+  .wireframe[data-theme="sage"] .wf-bubble { background: #eef4f0; border-color: #d6e3db; }
+  .wireframe[data-theme="sage"] .wf-bubble.user { background: #e1ece5; border-color: #c5d9cd; }
+  .wireframe[data-theme="sage"] .wf-card { background: #ffffff; border-color: #dce6e0; border-radius: 10px; box-shadow: 0 1px 3px rgba(24,42,36,0.04); }
+  .wireframe[data-theme="sage"] .wf-legend { background: #f4f7f5; border-top-color: #dce6e0; }
+
+  /* Visual Color Palette Cards */
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 12px 0 14px;
+  }
+  .swatch-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    background: #fff;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+  }
+  .swatch-card:hover { border-color: #94a3b8; transform: translateY(-1px); }
+  .swatch-card.active {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(29, 63, 115, 0.12);
+  }
+  .swatch-strip {
+    display: flex;
+    height: 36px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    margin-bottom: 9px;
+  }
+  .swatch-strip span { flex: 1; display: block; }
+  .swatch-card h4 { margin: 0 0 3px; font-size: 13.5px; color: var(--navy-dark); }
+  .swatch-card p { margin: 0; font-size: 11.8px; color: var(--slate); line-height: 1.45; }
+  .status-swatch-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 8px 0 16px;
+  }
+  .status-swatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #fff;
+    font-size: 12px;
+  }
+  .status-swatch .chip-box {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    flex: 0 0 24px;
+  }
   .wf-card {
     border: 1px solid var(--border);
     border-radius: 7px;
@@ -702,7 +788,7 @@
   @media (max-width: 980px) {
     .shell { grid-template-columns: 1fr; padding: 14px 14px 48px; }
     .sidebar { display: none; }
-    .tri-grid, .case-grid, .sim-controls, .sim-results, .arch-flow, .wf-body, .shield-grid { grid-template-columns: 1fr; }
+    .tri-grid, .case-grid, .sim-controls, .sim-results, .arch-flow, .wf-body, .shield-grid, .palette-grid, .status-swatch-row { grid-template-columns: 1fr; }
     .research-tag { margin-left: 0; }
   }
   @media print {
@@ -1353,7 +1439,7 @@
       <h2>IeumOffice형 3단 워크스페이스 UX &amp; 비개발자 노코드 세팅법</h2>
       <p>개발자가 아닌 <strong>의사·약사·간호사</strong>가 매일 쓰려면 입력 폼 20개를 채우는 방식이 아니라, <strong>IeumOffice처럼 익숙한 A4 문서가 중앙에 있고 왼쪽 챗봇·오른쪽 분석 패널이 보조하는 3단 구조</strong>가 가장 직관적입니다.</p>
 
-      <div class="wireframe" aria-label="3단 워크스페이스 시각적 와이어프레임">
+      <div class="wireframe" id="wireframePreview" data-theme="warm" aria-label="3단 워크스페이스 시각적 와이어프레임">
         <div class="wf-topbar">
           <span class="wf-chip">LLM: GPT-4o / 로컬 Ollama ▾</span>
           <span class="wf-chip">정책: 임상 실무형 ▾</span>
@@ -1408,6 +1494,64 @@
           <span><span class="sp-dot dot-blue"></span>맞춤법 · 원내 전문용어 예외</span>
           <span style="margin-left:auto;font-weight:700;color:#1d3f73;">[일괄 적용] [돌아가기] [전체 복사]</span>
         </div>
+      </div>
+
+      <h3>★ 비(非)AI 세련된 색 팔레트 비교 (카드를 누르면 위 화면에 바로 적용됩니다)</h3>
+      <p>보라↔파랑 그라데이션, 반짝이(✨), 과한 그림자 같은 <strong>‘AI 티(AI Slop)’를 전면 배제</strong>하고, 장시간 봐도 눈이 편안한 <strong>종이·잉크 기반 부드러운 카드 UI</strong> 3가지 시안을 직접 눌러 비교해 볼 수 있습니다.</p>
+      <div class="palette-grid" role="group" aria-label="워크스페이스 색상 테마 미리보기">
+        <button type="button" class="swatch-card active" data-wf-theme="warm">
+          <div class="swatch-strip" aria-hidden="true">
+            <span style="background:#efede8;" title="바탕"></span>
+            <span style="background:#fbfaf7;" title="사이드 패널"></span>
+            <span style="background:#ffffff;" title="A4 용지"></span>
+            <span style="background:#1c1917;" title="먹색 본문"></span>
+            <span style="background:#1e3a5f;" title="포인트 네이비"></span>
+          </div>
+          <h4>A. 웜 페이퍼 &amp; 잉크 (Warm Editorial)</h4>
+          <p>따뜻한 미색 종이 바탕 + 순백 A4 + 딥 네이비. Notion·편집지처럼 가장 편안하고 고급스러운 느낌.</p>
+        </button>
+        <button type="button" class="swatch-card" data-wf-theme="cool">
+          <div class="swatch-strip" aria-hidden="true">
+            <span style="background:#e9eef5;" title="바탕"></span>
+            <span style="background:#fafbfd;" title="사이드 패널"></span>
+            <span style="background:#ffffff;" title="A4 용지"></span>
+            <span style="background:#0f172a;" title="슬레이트 본문"></span>
+            <span style="background:#1d3f73;" title="클리니컬 네이비"></span>
+          </div>
+          <h4>B. 쿨 슬레이트 (Cool Clinical)</h4>
+          <p>정갈한 쿨 그레이 + 순백 A4 + 클리니컬 네이비. Linear·IeumOffice 같은 정밀한 전문가 소프트웨어 감성.</p>
+        </button>
+        <button type="button" class="swatch-card" data-wf-theme="sage">
+          <div class="swatch-strip" aria-hidden="true">
+            <span style="background:#e8f0eb;" title="바탕"></span>
+            <span style="background:#fafcfa;" title="사이드 패널"></span>
+            <span style="background:#ffffff;" title="A4 용지"></span>
+            <span style="background:#182a24;" title="딥 차콜 본문"></span>
+            <span style="background:#1f4e46;" title="딥 세이지 그린"></span>
+          </div>
+          <h4>C. 소프트 세이지 (Medical Calm)</h4>
+          <p>아주 옅은 세이지 미색 + 차분한 딥 그린. 병원·의료 워크스테이션에서 장시간 봐도 눈 피로가 적음.</p>
+        </button>
+      </div>
+
+      <p style="font-size:12.6px;color:var(--slate);margin-bottom:6px;"><strong>교정 · 근거 4색 상태 컬러</strong> (원색 형광 대신 채도를 낮춘 차분한 톤으로 밑줄·점에만 절제 사용):</p>
+      <div class="status-swatch-row">
+        <div class="status-swatch"><span class="chip-box" style="background:#c84b4b;"></span><div><strong>크림슨 레드</strong><br><span style="font-size:11px;color:#5c6b7a;">수치 오류 · 번역투</span></div></div>
+        <div class="status-swatch"><span class="chip-box" style="background:#c47f17;"></span><div><strong>머스타드 앰버</strong><br><span style="font-size:11px;color:#5c6b7a;">민감도 · 쟁점</span></div></div>
+        <div class="status-swatch"><span class="chip-box" style="background:#2b7a4b;"></span><div><strong>포레스트 그린</strong><br><span style="font-size:11px;color:#5c6b7a;">문헌 · MedDRA</span></div></div>
+        <div class="status-swatch"><span class="chip-box" style="background:#2e66b2;"></span><div><strong>스틸 블루</strong><br><span style="font-size:11px;color:#5c6b7a;">맞춤법 · 사전</span></div></div>
+      </div>
+
+      <h3>세련된 비(非)AI UI 구현용 추천 오픈소스 스택</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>영역</th><th>추천 오픈소스</th><th>적용 포인트</th></tr></thead>
+          <tbody>
+            <tr><td><strong>UI 컴포넌트</strong></td><td><code>shadcn/ui</code> + <code>Radix UI</code>(또는 <code>Base UI</code>) / <code>Park UI</code></td><td>얇은 1px 테두리·부드러운 모서리(<code>12px</code>)·넉넉한 여백의 부드러운 종이 카드 직접 제어.</td></tr>
+            <tr><td><strong>A4 에디터</strong></td><td><code>Tiptap</code> (ProseMirror 기반)</td><td>A4 용지(<code>210mm</code>) + <code>nara-speller</code>형 인라인 루비/밑줄 + 원클릭 <code>[적용/되돌리기]</code>.</td></tr>
+            <tr><td><strong>모션 · 타이포 · 아이콘</strong></td><td><code>Motion</code> · <code>Pretendard Variable</code> · <code>JetBrains Mono</code> · <code>Lucide</code></td><td>150ms 차분한 카드 펼침, <code>tabular-nums</code> 수치 줄맞춤, 1.5px 얇은 모노라인 아이콘(✨·🤖 금지).</td></tr>
+          </tbody>
+        </table>
       </div>
 
       <h3>입력 자동 감지형 듀얼 워크플로우 (초안 생성 vs 원문 보존 첨삭)</h3>
@@ -1803,6 +1947,16 @@
   });
 
   document.getElementById('btnPrint').addEventListener('click', () => window.print());
+
+  // Live Wireframe Theme Switcher
+  const wf = document.getElementById('wireframePreview');
+  const swatchBtns = Array.from(document.querySelectorAll('.swatch-card[data-wf-theme]'));
+  swatchBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (wf) wf.dataset.theme = btn.dataset.wfTheme;
+      swatchBtns.forEach(b => b.classList.toggle('active', b === btn));
+    });
+  });
 
   // Sidebar scroll tracking
   const secs = Array.from(document.querySelectorAll('section.doc-sec'));
