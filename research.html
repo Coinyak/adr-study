@@ -1588,10 +1588,18 @@
       </ul>
 
       <h3>의사·약사·간호사가 세팅하는 노코드 정책 &amp; 3층 개인 문체 엔진</h3>
-      <p>날짜·약물 표기 같은 큰 규칙은 코드로 제어할 수 있지만, <em>"판단됨" vs "판단합니다"</em>, <em>"병용약" vs "병용약제에 의한 발생가능성이 낮아"</em> 같은 개인 고유 어휘·어미·호흡은 단순 체크박스로 담을 수 없습니다. 따라서 <strong>객관식 성향 퀴즈(판정 정책)</strong>와 <strong>주관식 작성 기반 3층 개인 문체 엔진(표현 습관)</strong>을 결합합니다.</p>
+      <p>날짜·약물 표기 같은 큰 규칙은 코드로 제어할 수 있지만, <em>"판단됨" vs "판단합니다"</em>, <em>"병용약" vs "병용약제에 의한 발생가능성이 낮아"</em> 같은 개인 고유 어휘·어미·호흡은 단순 체크박스로 담을 수 없습니다. 따라서 <strong>내 병원 EMR → 내 정답 쌍 역분석(Reverse Calibration)</strong>을 최상위 세팅법으로 두고, 퀴즈·편집 Diff 학습을 결합합니다.</p>
       <div class="case-grid">
+        <div class="case-box" style="grid-column: 1 / -1; background: var(--research-bg); border-color: var(--research-border);">
+          <div class="case-box-head"><h4>★ 최강 원샷 세팅: 내 EMR → 내 정답 쌍 역분석 (Reverse Calibration)</h4><span class="verdict" style="color:var(--navy);">EMR 포맷 · 정책 · 문체 동시 학습</span></div>
+          <ul>
+            <li><strong>방식</strong>: 사용자가 <strong>평소 자기 병원에서 보는 EMR 원문 1~2건</strong>을 직접 퀴즈 문제로 넣고, <strong>"나는 이렇게 평가하고 작성한다"는 본인 정답 보고서</strong>를 짝지어 제출.</li>
+            <li><strong>4차원 동시 역추출</strong>: LLM이 <code>[내 EMR] → [내 정답]</code> 변환 과정을 분석해 <strong>① 원내 EMR 특유 포맷·약어 파싱법</strong>, <strong>② 상세내용 정보 취사선택 밀도</strong>, <strong>③ 인과성 판정 기준(병용약·Dechallenge·약물명 표기)</strong>, <strong>④ 개인 문체(어미·어휘·호흡) + Few-Shot 원형</strong>을 한 번에 세팅.</li>
+            <li><strong>검수 UX</strong>: 추출된 규칙을 5~6줄 한글 체크카드로 보여주고 <code>[맞아요, 이대로 저장]</code> 클릭만으로 완료(병원별 제각각인 EMR 복붙 형식에 가장 정확하게 적응).</li>
+          </ul>
+        </div>
         <div class="case-box">
-          <div class="case-box-head"><h4>① 주관식 작성 퀴즈 + Few-Shot 복제</h4><span class="verdict">문체 역추출</span></div>
+          <div class="case-box-head"><h4>① 내장 주관식 작성 퀴즈 + Few-Shot 복제</h4><span class="verdict">예시 없을 때</span></div>
           <ul>
             <li>복잡한 가상 사례 1건의 원시 팩트를 주고 <strong>평소 방식대로 <code>상세내용/검토의견</code>을 직접 주관식 작성</strong>(또는 기존 보고서 1~2건 붙여넣기).</li>
             <li>LLM이 선호 어미(<code>~판단합니다</code>)·어휘 치환표(<code>병용약→병용약제</code>)·문장 호흡을 <strong>한글 스타일 카드</strong>로 추출하고, <strong>작성 원문 자체를 Few-Shot 예시로 함께 주입</strong>해 말투 재현도를 극대화.</li>
